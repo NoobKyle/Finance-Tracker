@@ -1,0 +1,11 @@
+/.vs
+
+
+# React
+/client/node_modules
+/client/dist
+/client/build
+
+# .NET
+/server/bin
+/server/obj
