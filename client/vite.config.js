@@ -8,4 +8,7 @@ export default defineConfig({
         host: true, // equivalent to --host
         port: 5173, // optional
     },
+    build: {
+        outDir: 'dist'
+    }
 })
