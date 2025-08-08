@@ -23,7 +23,7 @@ namespace CoupleFinanceTracker.Models
 
         public string Role { get; set; } = "Member";
 
-        public int CoupleId { get; set; }
+        public int? CoupleId { get; set; }
 
         public bool IsLinkedToPartner { get; set; } = false;
 
@@ -158,6 +158,10 @@ namespace CoupleFinanceTracker.Models
 
 		public int TransactionId { get; set; }
 
+		public int ExpenseId { get; set; }
+
+		public Expense Expense { get; set; }
+
 		[ForeignKey("TransactionId")]
 		public virtual Transaction Transaction { get; set; }
 	}
@@ -197,6 +201,10 @@ namespace CoupleFinanceTracker.Models
 
 		public int TransactionId { get; set; }
 
+		public int ExpenseId { get; set; }
+		 
+		public Expense Expense { get; set; }
+
 		[ForeignKey("UserId")]
 		public virtual User User { get; set; }
 
@@ -224,6 +232,72 @@ namespace CoupleFinanceTracker.Models
 		public virtual Couple Couple { get; set; }
 	}
 
+	public class Expense
+	{
+		[Key]
+		public int Id { get; set; }
+
+		[Required]
+		public decimal Amount { get; set; }
+
+		public string Category { get; set; }
+
+		[Required]
+		public DateTime Date { get; set; }
+
+		public bool IsShared { get; set; }
+
+		[Required]
+		public int UserId { get; set; }
+
+		[ForeignKey("UserId")]
+		public User User { get; set; }
+
+		public virtual ICollection<Receipt> Receipts { get; set; }
+		public virtual ICollection<Comment> Comments { get; set; }
+	}
+
+	public class Income
+	{
+		[Key]
+		public int Id { get; set; }
+
+		[Required]
+		public decimal Amount { get; set; }
+
+		public string Source { get; set; }
+
+		[Required]
+		public DateTime Date { get; set; }
+
+		[Required]
+		public int UserId { get; set; }
+
+		[ForeignKey("UserId")]
+		public User User { get; set; }
+	}
+
+	public class RecurringExpense
+	{
+		[Key]
+		public int Id { get; set; }
+
+		[Required]
+		public string Name { get; set; }
+
+		[Required]
+		public decimal Amount { get; set; }
+
+		public string Frequency { get; set; } // e.g. Monthly, Weekly
+
+		[Required]
+		public int UserId { get; set; }
+
+		[ForeignKey("UserId")]
+		public User User { get; set; }
+
+		public bool IsShared { get; set; }
+	}
 
 
 }
