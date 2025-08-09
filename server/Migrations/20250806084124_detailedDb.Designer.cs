@@ -3,6 +3,7 @@ using System;
 using CoupleFinanceTracker.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoupleFinanceTracker.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250806084124_detailedDb")]
+    partial class detailedDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +23,40 @@ namespace CoupleFinanceTracker.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("CoupleFinanceTracker.Models.ActivityLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("CoupleId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CoupleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ActivityLogs");
+                });
 
             modelBuilder.Entity("CoupleFinanceTracker.Models.Budget", b =>
                 {
@@ -54,16 +90,11 @@ namespace CoupleFinanceTracker.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("UserId1")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CoupleId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Budgets");
                 });
@@ -79,9 +110,6 @@ namespace CoupleFinanceTracker.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("ExpenseId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("text");
@@ -93,8 +121,6 @@ namespace CoupleFinanceTracker.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ExpenseId");
 
                     b.HasIndex("TransactionId");
 
@@ -126,75 +152,6 @@ namespace CoupleFinanceTracker.Migrations
                     b.ToTable("Couples");
                 });
 
-            modelBuilder.Entity("CoupleFinanceTracker.Models.Expense", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsShared")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UserId1")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("Expenses");
-                });
-
-            modelBuilder.Entity("CoupleFinanceTracker.Models.Income", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Source")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UserId1")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("Incomes");
-                });
-
             modelBuilder.Entity("CoupleFinanceTracker.Models.Receipt", b =>
                 {
                     b.Property<int>("Id")
@@ -202,9 +159,6 @@ namespace CoupleFinanceTracker.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ExpenseId")
-                        .HasColumnType("integer");
 
                     b.Property<string>("FileName")
                         .IsRequired()
@@ -222,14 +176,12 @@ namespace CoupleFinanceTracker.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExpenseId");
-
                     b.HasIndex("TransactionId");
 
                     b.ToTable("Receipts");
                 });
 
-            modelBuilder.Entity("CoupleFinanceTracker.Models.RecurringExpense", b =>
+            modelBuilder.Entity("CoupleFinanceTracker.Models.Reminder", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -237,33 +189,31 @@ namespace CoupleFinanceTracker.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
-
                     b.Property<string>("Frequency")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsShared")
+                    b.Property<bool>("IsNotified")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Name")
+                    b.Property<bool>("IsRecurring")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("ReminderDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("UserId1")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("RecurringExpenses");
+                    b.ToTable("Reminders");
                 });
 
             modelBuilder.Entity("CoupleFinanceTracker.Models.SavingsGoal", b =>
@@ -275,9 +225,6 @@ namespace CoupleFinanceTracker.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CoupleId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("CoupleId1")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("CurrentAmount")
@@ -296,8 +243,6 @@ namespace CoupleFinanceTracker.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CoupleId");
-
-                    b.HasIndex("CoupleId1");
 
                     b.ToTable("SavingsGoals");
                 });
@@ -328,7 +273,7 @@ namespace CoupleFinanceTracker.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SavingsGoalContribution");
+                    b.ToTable("SavingsGoalContributions");
                 });
 
             modelBuilder.Entity("CoupleFinanceTracker.Models.Transaction", b =>
@@ -373,7 +318,7 @@ namespace CoupleFinanceTracker.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("Transaction");
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("CoupleFinanceTracker.Models.User", b =>
@@ -384,8 +329,7 @@ namespace CoupleFinanceTracker.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CoupleId")
-                        .IsRequired()
+                    b.Property<int>("CoupleId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Email")
@@ -418,6 +362,25 @@ namespace CoupleFinanceTracker.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("CoupleFinanceTracker.Models.ActivityLog", b =>
+                {
+                    b.HasOne("CoupleFinanceTracker.Models.Couple", "Couple")
+                        .WithMany()
+                        .HasForeignKey("CoupleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CoupleFinanceTracker.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Couple");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CoupleFinanceTracker.Models.Budget", b =>
                 {
                     b.HasOne("CoupleFinanceTracker.Models.Couple", "Couple")
@@ -426,15 +389,9 @@ namespace CoupleFinanceTracker.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoupleFinanceTracker.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("CoupleFinanceTracker.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -445,12 +402,6 @@ namespace CoupleFinanceTracker.Migrations
 
             modelBuilder.Entity("CoupleFinanceTracker.Models.Comment", b =>
                 {
-                    b.HasOne("CoupleFinanceTracker.Models.Expense", "Expense")
-                        .WithMany("Comments")
-                        .HasForeignKey("ExpenseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("CoupleFinanceTracker.Models.Transaction", "Transaction")
                         .WithMany("Comments")
                         .HasForeignKey("TransactionId")
@@ -463,77 +414,27 @@ namespace CoupleFinanceTracker.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Expense");
-
                     b.Navigation("Transaction");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CoupleFinanceTracker.Models.Expense", b =>
-                {
-                    b.HasOne("CoupleFinanceTracker.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CoupleFinanceTracker.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CoupleFinanceTracker.Models.Income", b =>
-                {
-                    b.HasOne("CoupleFinanceTracker.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CoupleFinanceTracker.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("CoupleFinanceTracker.Models.Receipt", b =>
                 {
-                    b.HasOne("CoupleFinanceTracker.Models.Expense", "Expense")
-                        .WithMany("Receipts")
-                        .HasForeignKey("ExpenseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("CoupleFinanceTracker.Models.Transaction", "Transaction")
                         .WithMany("Receipts")
                         .HasForeignKey("TransactionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Expense");
-
                     b.Navigation("Transaction");
                 });
 
-            modelBuilder.Entity("CoupleFinanceTracker.Models.RecurringExpense", b =>
+            modelBuilder.Entity("CoupleFinanceTracker.Models.Reminder", b =>
                 {
-                    b.HasOne("CoupleFinanceTracker.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("CoupleFinanceTracker.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -542,15 +443,9 @@ namespace CoupleFinanceTracker.Migrations
 
             modelBuilder.Entity("CoupleFinanceTracker.Models.SavingsGoal", b =>
                 {
-                    b.HasOne("CoupleFinanceTracker.Models.Couple", null)
-                        .WithMany()
-                        .HasForeignKey("CoupleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("CoupleFinanceTracker.Models.Couple", "Couple")
                         .WithMany("SavingsGoals")
-                        .HasForeignKey("CoupleId1")
+                        .HasForeignKey("CoupleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -600,7 +495,7 @@ namespace CoupleFinanceTracker.Migrations
                     b.HasOne("CoupleFinanceTracker.Models.Couple", "Couple")
                         .WithMany("Users")
                         .HasForeignKey("CoupleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Couple");
@@ -613,13 +508,6 @@ namespace CoupleFinanceTracker.Migrations
                     b.Navigation("SavingsGoals");
 
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("CoupleFinanceTracker.Models.Expense", b =>
-                {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Receipts");
                 });
 
             modelBuilder.Entity("CoupleFinanceTracker.Models.SavingsGoal", b =>
