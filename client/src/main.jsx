@@ -5,7 +5,7 @@ import Login from './pages/auth/login.jsx'
 import Signup from './pages/auth/signup.jsx'
 import ErrorPage from './pages/auth/ErrorPage.jsx'
 import './index.css'
-import UsersTest from './pages/user/userstest.jsx'
+import UserInfo from './pages/user/userinfo.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
@@ -15,7 +15,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
 
-                <Route path="/test" element={<UsersTest />} />
+                <Route path="/user" element={<UserInfo />} />
+                {/*<Route path="/user/update" element={<UserInfo />} />*/}
+                {/*<Route path="/user/delete" element={<UserInfo />} />*/}
 
             </Routes>
         </BrowserRouter>

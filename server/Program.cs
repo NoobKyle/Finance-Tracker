@@ -11,7 +11,7 @@ builder.Services.AddCors(options =>
 		policy
 			.WithOrigins(
 				"http://localhost:5173", // Vite default
-				"https://couplefinancetracker.vercel.app/" // Production frontend
+				"https://couplefinancetracker.vercel.app" // Production frontend
 			)
 			.AllowAnyHeader()
 			.AllowAnyMethod();
