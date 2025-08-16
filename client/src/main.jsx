@@ -16,8 +16,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 <Route path="/signup" element={<Signup />} />
 
                 <Route path="/user" element={<UserInfo />} />
-                {/*<Route path="/user/update" element={<UserInfo />} />*/}
-                {/*<Route path="/user/delete" element={<UserInfo />} />*/}
 
             </Routes>
         </BrowserRouter>

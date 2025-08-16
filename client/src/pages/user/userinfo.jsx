@@ -5,9 +5,24 @@ export default function UsersTest() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showUpdateModal, setShowUpdateModal] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [updating, setUpdating] = useState(false);
+    const [updateForm, setUpdateForm] = useState({
+        fullName: "",
+        email: "",
+        coupleId: "",
+        incomeSource: "",
+        role: "",
+        isLinkedToPartner: false,
+    });
 
-    // You can change this to a dynamic id if needed
-    const userId = 12;
+    let userId = 0;
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) {
+        userId = storedUser.id;
+    }
 
     useEffect(() => {
         api.get(`/users/${userId}`)
@@ -21,6 +36,14 @@ export default function UsersTest() {
                     }
                 }
                 setUser(result);
+                setUpdateForm({
+                    fullName: result.fullName || "",
+                    email: result.email || "",
+                    coupleId: result.coupleId || "",
+                    incomeSource: result.incomeSource || "",
+                    role: result.role || "",
+                    isLinkedToPartner: result.isLinkedToPartner || false,
+                });
                 setLoading(false);
             })
             .catch(err => {
@@ -29,206 +52,173 @@ export default function UsersTest() {
             });
     }, [userId]);
 
-    if (loading) return <p>Loading user info...</p>;
-    if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
-    if (!user) return <p>No user data found.</p>;
+    const handleUpdateUser = () => setShowUpdateModal(true);
+    const handleDeleteUser = () => setShowDeleteModal(true);
+
+    const confirmDelete = async () => {
+        if (!user) return;
+        try {
+            setDeleting(true);
+            await api.delete(`/users/${user.id}`);
+            alert("User deleted successfully");
+            setShowDeleteModal(false);
+            setUser(null);
+        } catch (err) {
+            alert("Failed to delete user: " + (err.response?.data?.message || err.message));
+        } finally {
+            setDeleting(false);
+        }
+    };
+
+    const confirmUpdate = async () => {
+        if (!user) return;
+        try {
+            setUpdating(true);
+            await api.put(`/users/${user.id}`, updateForm);
+            alert("User updated successfully");
+            setShowUpdateModal(false);
+            setUser(prev => ({ ...prev, ...updateForm }));
+        } catch (err) {
+            alert("Failed to update user: " + (err.response?.data?.message || err.message));
+        } finally {
+            setUpdating(false);
+        }
+    };
+
+    if (loading) return <p className="text-gray-500">Loading user info...</p>;
+    if (error) return <p className="text-red-500">Error: {error}</p>;
+    if (!user) return <p className="text-gray-500">No user data found.</p>;
 
     return (
-        <div className="fixed top-50 start-50 z-80 overflow-x-hidden overflow-y-auto pointer-events-none">
-            <div className="max-h-full overflow-hidden flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800 dark:shadow-neutral-700/70">
-                <div className="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-800">
-                    <h3 className="font-bold text-gray-800 dark:text-neutral-200">
-                        User Information
-                    </h3>
-                </div>
-
-                <div className="p-4 overflow-y-auto">
-                    <div className="sm:divide-y divide-gray-200 dark:divide-neutral-700">
-                        <div className="py-3 sm:py-6">
-                            <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
-                                {/* Full Name */}
-                                <div className="bg-white p-4 transition duration-300 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                    <div className="flex gap-x-6">
-                                        <div className="mt-1.5 flex justify-center shrink-0 rounded-s-xl">
-                                            <svg
-                                                className="size-5 text-gray-800 dark:text-neutral-200"
-                                                width="16"
-                                                height="16"
-                                                fill="currentColor"
-                                                viewBox="0 0 16 16"
-                                            >
-                                                <path d="M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z"></path>
-                                            </svg>
-                                        </div>
-                                        <div className="grow">
-                                            <h3 className="text-sm font-semibold text-blue-600 dark:text-blue-500">
-                                                Full Name
-                                            </h3>
-                                            <p className="mt-1 text-sm text-gray-600 dark:text-neutral-500">
-                                                {user.fullName}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Email */}
-                                <div className="bg-white p-4 transition duration-300 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                    <div className="flex gap-x-6">
-                                        <div className="mt-1.5 flex justify-center shrink-0 rounded-s-xl">
-                                            <svg
-                                                className="size-5 text-gray-800 dark:text-neutral-200"
-                                                width="16"
-                                                height="16"
-                                                viewBox="0 0 16 16"
-                                                fill="none"
-                                            >
-                                                <path
-                                                    d="M12.4077 1H12.9077C14.0123 1 14.9077 1.89543 14.9077 3V13C14.9077 14.1046 14.0123 15 12.9077 15H2.90771C1.80315 15 0.907715 14.1046 0.907715 13V3C0.907715 1.89543 1.80314 1 2.90771 1H5.10034C5.83943 1 6.43858 1.59915 6.43858 2.33824C6.43858 3.07732 7.03773 3.67647 7.77681 3.67647H14.4077M8.5 1H8.90771C10.0123 1 10.9077 1.89543 10.9077 3V3.5M3.90771 8H9.90771M3.90771 11.5H11.9077"
-                                                    stroke="currentColor"
-                                                    strokeLinecap="round"
-                                                ></path>
-                                            </svg>
-                                        </div>
-                                        <div className="grow">
-                                            <h3 className="text-sm font-semibold text-blue-600 dark:text-blue-500">
-                                                Email
-                                            </h3>
-                                            <p className="mt-1 text-sm text-gray-600 dark:text-neutral-500">
-                                                {user.email}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Couple ID */}
-                                <div className="bg-white p-4 transition duration-300 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                    <div className="flex gap-x-6">
-                                        <div className="mt-1.5 flex justify-center shrink-0 rounded-s-xl">
-                                            <svg
-                                                className="size-5 text-gray-800 dark:text-neutral-200"
-                                                width="16"
-                                                height="16"
-                                                fill="currentColor"
-                                                viewBox="0 0 16 16"
-                                            >
-                                                <path
-                                                    fillRule="evenodd"
-                                                    d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <div className="grow">
-                                            <h3 className="text-sm font-semibold text-blue-600 dark:text-blue-500">
-                                                Couple ID
-                                            </h3>
-                                            <p className="mt-1 text-sm text-gray-600 dark:text-neutral-500">
-                                                {user.coupleId}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Income Source */}
-                                <div className="bg-white p-4 transition duration-300 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                    <div className="flex gap-x-6">
-                                        <div className="mt-1.5 flex justify-center shrink-0 rounded-s-xl">
-                                            <svg
-                                                className="size-5 text-gray-800 dark:text-neutral-200"
-                                                width="16"
-                                                height="16"
-                                                fill="none"
-                                                viewBox="0 0 16 16"
-                                            >
-                                                <path
-                                                    d="M8 6.00002V13M3 8.00002H6M10 8.00002H13M3 11H6M10 11H13M1 5.50002V13.5C1 14.6046 1.89543 15.5 3 15.5H13C14.1046 15.5 15 14.6046 15 13.5V5.50002C15 4.39545 14.1046 3.5 13 3.5H3C1.89543 3.5 1 4.39545 1 5.50002Z"
-                                                    stroke="currentColor"
-                                                    strokeLinecap="round"
-                                                ></path>
-                                            </svg>
-                                        </div>
-                                        <div className="grow">
-                                            <h3 className="text-sm font-semibold text-blue-600 dark:text-blue-500">
-                                                Income Source
-                                            </h3>
-                                            <p className="mt-1 text-sm text-gray-600 dark:text-neutral-500">
-                                                {user.incomeSource}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Role */}
-                                <div className="bg-white p-4 transition duration-300 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                    <div className="flex gap-x-6">
-                                        <div className="mt-1.5 flex justify-center shrink-0 rounded-s-xl">
-                                            <svg
-                                                className="size-5 text-gray-800 dark:text-neutral-200"
-                                                width="16"
-                                                height="16"
-                                                fill="none"
-                                                viewBox="0 0 16 16"
-                                            >
-                                                <path
-                                                    d="M8 15L8 8M12 15L12 8M3 3L5 3M3 6L5 6M3 9L5 9M3 12L5 12M5 3L5 12M8 15L8 8M12 15L12 8M8 8L12 8M8 15L12 15"
-                                                    stroke="currentColor"
-                                                    strokeLinecap="round"
-                                                ></path>
-                                            </svg>
-                                        </div>
-                                        <div className="grow">
-                                            <h3 className="text-sm font-semibold text-blue-600 dark:text-blue-500">
-                                                Role
-                                            </h3>
-                                            <p className="mt-1 text-sm text-gray-600 dark:text-neutral-500">
-                                                {user.role}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Is Linked to Partner */}
-                                <div className="bg-white p-4 transition duration-300 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                    <div className="flex gap-x-6">
-                                        <div className="mt-1.5 flex justify-center shrink-0 rounded-s-xl">
-                                            <svg
-                                                className="size-5 text-gray-800 dark:text-neutral-200"
-                                                width="16"
-                                                height="16"
-                                                fill="none"
-                                                viewBox="0 0 16 16"
-                                            >
-                                                <circle
-                                                    cx="8"
-                                                    cy="8"
-                                                    r="7"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                />
-                                                <path
-                                                    d="M6 8L7.5 9.5L10 6"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <div className="grow">
-                                            <h3 className="text-sm font-semibold text-blue-600 dark:text-blue-500">
-                                                Linked To Partner
-                                            </h3>
-                                            <p className="mt-1 text-sm text-gray-600 dark:text-neutral-500">
-                                                {user.isLinkedToPartner ? "Yes" : "No"}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
+        <>
+            {/* User Info Modal */}
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+                <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-xl w-96 max-w-full overflow-hidden">
+                    <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-neutral-700">
+                        <h3 className="text-xl font-semibold text-gray-800 dark:text-neutral-100">
+                            User Information
+                        </h3>
+                        <button onClick={() => setShowUpdateModal(false)} className="text-gray-400 hover:text-gray-600">&times;</button>
+                    </div>
+                    <div className="p-4 space-y-2">
+                        <p><span className="font-medium">Full Name:</span> {user.fullName}</p>
+                        <p><span className="font-medium">Email:</span> {user.email}</p>
+                        <p><span className="font-medium">Couple ID:</span> {user.coupleId}</p>
+                        <p><span className="font-medium">Income Source:</span> {user.incomeSource}</p>
+                        <p><span className="font-medium">Role:</span> {user.role}</p>
+                        <p><span className="font-medium">Linked to Partner:</span> {user.isLinkedToPartner ? "Yes" : "No"}</p>
+                    </div>
+                    <div className="flex justify-end gap-3 p-4 border-t border-gray-200 dark:border-neutral-700">
+                        <button
+                            onClick={handleUpdateUser}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                        >
+                            Update
+                        </button>
+                        <button
+                            onClick={handleDeleteUser}
+                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                        >
+                            Delete
+                        </button>
                     </div>
                 </div>
             </div>
-        </div>
+
+            {/* Delete Confirmation Modal */}
+            {showDeleteModal && (
+                <div className="fixed inset-0 z-60 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white dark:bg-neutral-900 p-6 rounded-2xl shadow-lg w-80">
+                        <h2 className="text-lg font-semibold mb-2">Confirm Deletion</h2>
+                        <p className="mb-4">Are you sure you want to delete <strong>{user.fullName}</strong>?</p>
+                        <div className="flex justify-end gap-2">
+                            <button
+                                onClick={() => setShowDeleteModal(false)}
+                                className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmDelete}
+                                disabled={deleting}
+                                className="px-4 py-2 bg-red-600 text-white rounded-lg disabled:opacity-50 hover:bg-red-700"
+                            >
+                                {deleting ? "Deleting..." : "Delete"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Update Modal */}
+            {showUpdateModal && (
+                <div className="fixed inset-0 z-60 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white dark:bg-neutral-900 p-6 rounded-2xl shadow-lg w-96 max-w-full">
+                        <h2 className="text-lg font-semibold mb-4">Update User</h2>
+                        <form className="space-y-3">
+                            <input
+                                type="text"
+                                value={updateForm.fullName}
+                                onChange={(e) => setUpdateForm({ ...updateForm, fullName: e.target.value })}
+                                placeholder="Full Name"
+                                className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <input
+                                type="email"
+                                value={updateForm.email}
+                                onChange={(e) => setUpdateForm({ ...updateForm, email: e.target.value })}
+                                placeholder="Email"
+                                className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <input
+                                type="text"
+                                value={updateForm.coupleId}
+                                onChange={(e) => setUpdateForm({ ...updateForm, coupleId: e.target.value })}
+                                placeholder="Couple ID"
+                                className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <input
+                                type="text"
+                                value={updateForm.incomeSource}
+                                onChange={(e) => setUpdateForm({ ...updateForm, incomeSource: e.target.value })}
+                                placeholder="Income Source"
+                                className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <input
+                                type="text"
+                                value={updateForm.role}
+                                onChange={(e) => setUpdateForm({ ...updateForm, role: e.target.value })}
+                                placeholder="Role"
+                                className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <label className="flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    checked={updateForm.isLinkedToPartner}
+                                    onChange={(e) => setUpdateForm({ ...updateForm, isLinkedToPartner: e.target.checked })}
+                                    className="w-4 h-4"
+                                />
+                                Linked to Partner
+                            </label>
+                        </form>
+                        <div className="flex justify-end gap-2 mt-4">
+                            <button
+                                onClick={() => setShowUpdateModal(false)}
+                                className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmUpdate}
+                                disabled={updating}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 hover:bg-blue-700"
+                            >
+                                {updating ? "Updating..." : "Save"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
