@@ -65,5 +65,19 @@ namespace CoupleFinanceTracker.Controllers
 			await _context.SaveChangesAsync();
 			return NoContent();
 		}
+
+		[HttpGet("user/{userId}")]
+		public async Task<ActionResult<IEnumerable<IncomeReadDto>>> GetIncomesByUserId(int userId)
+		{
+			var incomes = await _context.Incomes
+										.Where(i => i.UserId == userId)
+										.ToListAsync();
+
+			if (!incomes.Any()) return NotFound($"No incomes found for UserId {userId}.");
+
+			var incomeDtos = _mapper.Map<IEnumerable<IncomeReadDto>>(incomes);
+			return Ok(incomeDtos);
+		}
+
 	}
 }

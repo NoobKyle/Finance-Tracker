@@ -78,6 +78,11 @@ namespace CoupleFinanceTracker.Data
 				.WithMany(e => e.Comments)
 				.HasForeignKey(c => c.ExpenseId);
 
+			modelBuilder.Entity<Income>()
+				.HasOne(i => i.User)
+				.WithMany()
+				.HasForeignKey(i => i.UserId);
+
 		}
 	}
 }
