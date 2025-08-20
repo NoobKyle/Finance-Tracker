@@ -90,6 +90,7 @@ namespace CoupleFinanceTracker.DTOs
 		public string Category { get; set; }
 		public DateTime Date { get; set; }
 		public bool IsShared { get; set; }
+		public int UserId { get; set; }
 	}
 	public class ExpenseUpdateDto
 	{

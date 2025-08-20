@@ -51,6 +51,12 @@ namespace CoupleFinanceTracker.Data
 				.OnDelete(DeleteBehavior.Cascade);
 
 			modelBuilder.Entity<Expense>()
+				.HasOne(e => e.User)          
+				.WithMany(u => u.Expenses)    
+				.HasForeignKey(e => e.UserId) 
+				.IsRequired();
+
+			modelBuilder.Entity<Expense>()
 				.HasMany<Receipt>()
 				.WithOne()
 				.HasForeignKey(r => r.ExpenseId)

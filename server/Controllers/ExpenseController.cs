@@ -72,5 +72,18 @@ namespace CoupleFinanceTracker.Controllers
 
 			return NoContent();
 		}
+
+		[HttpGet("user/{userId}")]
+		public async Task<ActionResult<IEnumerable<ExpenseReadDto>>> GetExpensesByUserId(int userId)
+		{
+			var expenses = await _context.Expenses
+				.Where(e => e.UserId == userId)
+				.ToListAsync();
+
+			if (expenses == null || expenses.Count == 0)
+				return NotFound($"No expenses found for user with id {userId}");
+
+			return Ok(_mapper.Map<IEnumerable<ExpenseReadDto>>(expenses));
+		}
 	}
 }
