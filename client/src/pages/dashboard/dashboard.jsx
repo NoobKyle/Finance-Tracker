@@ -1,7 +1,9 @@
+import React, { useState } from "react";
+import Menu from "./menu.jsx";
 
+const Dashboard = () => {
 
-export default function Dashboard() {
-
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
         <div className="container w-screen h-screen ">
@@ -73,9 +75,9 @@ export default function Dashboard() {
 
             <ul className="max-w-xs flex flex-col divide-y divide-gray-200 dark:divide-neutral-700 mt-4 ml-4">
                 <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white">
-                    <div class="flex justify-between w-full">
+                    <div className="flex justify-between w-full">
                         Groceries
-                        <span class="inline-flex items-center py-1 px-2  text-xs font-medium text-white">$ 700.00</span>
+                        <span className="inline-flex items-center py-1 px-2  text-xs font-medium text-white">$ 700.00</span>
                     </div>
                 </li>
                 <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white">
@@ -86,11 +88,17 @@ export default function Dashboard() {
                 </li>
             </ul>
 
-            <button class="fixed bottom-4 right-4 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-4 shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-300">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+
+            {isOpen && ( <Menu /> )}
+
+            <button onClick={() => setIsOpen(true)} className="fixed bottom-4 right-4 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-4 shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-300" >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
                 </svg>
             </button>
+
         </div>
     )
 }
+
+export default Dashboard;
