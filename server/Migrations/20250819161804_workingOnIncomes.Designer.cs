@@ -3,6 +3,7 @@ using System;
 using CoupleFinanceTracker.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoupleFinanceTracker.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250819161804_workingOnIncomes")]
+    partial class workingOnIncomes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,9 +152,14 @@ namespace CoupleFinanceTracker.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("UserId1")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Expenses");
                 });
@@ -178,9 +185,14 @@ namespace CoupleFinanceTracker.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("UserId1")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Incomes");
                 });
@@ -462,9 +474,15 @@ namespace CoupleFinanceTracker.Migrations
 
             modelBuilder.Entity("CoupleFinanceTracker.Models.Expense", b =>
                 {
-                    b.HasOne("CoupleFinanceTracker.Models.User", "User")
-                        .WithMany("Expenses")
+                    b.HasOne("CoupleFinanceTracker.Models.User", null)
+                        .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CoupleFinanceTracker.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -473,9 +491,15 @@ namespace CoupleFinanceTracker.Migrations
 
             modelBuilder.Entity("CoupleFinanceTracker.Models.Income", b =>
                 {
-                    b.HasOne("CoupleFinanceTracker.Models.User", "User")
+                    b.HasOne("CoupleFinanceTracker.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CoupleFinanceTracker.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -615,8 +639,6 @@ namespace CoupleFinanceTracker.Migrations
             modelBuilder.Entity("CoupleFinanceTracker.Models.User", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("Expenses");
 
                     b.Navigation("SavingsGoalContributions");
 

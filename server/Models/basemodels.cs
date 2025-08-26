@@ -34,6 +34,7 @@ namespace CoupleFinanceTracker.Models
 		public virtual ICollection<Transaction> Transactions { get; set; }
 		public virtual ICollection<SavingsGoalContribution> SavingsGoalContributions { get; set; }
 		public virtual ICollection<Comment> Comments { get; set; }
+		public virtual ICollection<Expense> Expenses { get; set; } = new List<Expense>();
 
 	}
 
@@ -250,7 +251,6 @@ namespace CoupleFinanceTracker.Models
 		[Required]
 		public int UserId { get; set; }
 
-		[ForeignKey("UserId")]
 		public User User { get; set; }
 
 		public virtual ICollection<Receipt> Receipts { get; set; }
@@ -273,7 +273,6 @@ namespace CoupleFinanceTracker.Models
 		[Required]
 		public int UserId { get; set; }
 
-		[ForeignKey("UserId")]
 		public User User { get; set; }
 	}
 
