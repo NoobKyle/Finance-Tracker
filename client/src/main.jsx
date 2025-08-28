@@ -10,6 +10,7 @@ import UserInfo from './pages/user/userinfo.jsx'
 import ProtectedRoute from './pages/auth/protectedRoute.jsx'
 
 import Income from './pages/controllers/income/income.jsx'
+import UserExpensePage from './pages/controllers/expenses/expense.jsx'
 
 import './index.css'
 
@@ -41,6 +42,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     element={
                         <ProtectedRoute>
                             <Income />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/expenses"
+                    element={
+                        <ProtectedRoute>
+                            <UserExpensePage />
                         </ProtectedRoute>
                     }
                 />

@@ -5,6 +5,75 @@ const Dashboard = () => {
 
     const [isOpen, setIsOpen] = useState(false);
 
+    const [title, setTitle] = useState("Total Income");
+    const [description, setDescription] = useState("This value represents the sum of all incomes for all connected partners.");
+    const [value, setValue] = useState(6500);
+    const [buttonText, setButtonText] = useState("Edit Income");
+    const [link, setLink] = useState("/income");
+
+    const [option, setOption] = useState("Total Income");
+    const changeHandler = (e) => {
+        const value = e.target.value;
+        setOption(value);
+
+
+        if (value === "Bills") {
+            billsClicked();
+        } else if (value === "Total Income") {
+            totalIncomeClicked();
+        } else if (value === "My Transactions") {
+            myTransactionsClicked();
+        } else if (value === "Misc") {
+            miscClicked();
+        }
+    };
+
+    const totalIncomeClicked = (e) => {
+
+        if (e) {
+            e.preventDefault();
+        }
+        setTitle("Total Income");
+        setDescription("This value represents the sum of the incomes for all connected partners.");
+        setValue(6500)
+        setButtonText("Edit Income");
+        setLink("/income")
+    }
+    const billsClicked = (e) => {
+
+        if (e) {
+            e.preventDefault();
+        }
+        setTitle("Expenses");
+        setDescription("This value represents the sum of the expenses for all connected partners.");
+        setValue(2200)
+        setButtonText("View More");
+        setLink("/expenses")
+    }
+    const myTransactionsClicked = (e) => {
+
+        if (e) {
+            e.preventDefault();
+        }
+        setTitle("My Transactions");
+        setDescription("This value represents the sum of all your transactions.");
+        setValue(105822)
+        setButtonText("View More");
+        setLink("/transactions")
+    }
+    const miscClicked = (e) => {
+
+        if (e) {
+            e.preventDefault();
+        }
+        setTitle("Misc");
+        setDescription("Extra information at a glance");
+        setValue(0)
+        setButtonText("View More");
+        setLink("/misc")
+    }
+    
+
     return (
         <div className="container w-screen h-screen ">
             <header className="flex flex-wrap sm:justify-start sm:flex-nowrap z-50 w-full bg-white text-sm py-3 sm:py-0 dark:bg-neutral-900 mb-4">
@@ -25,10 +94,10 @@ const Dashboard = () => {
             <div className="flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70">
             {/* Select (Mobile only) */}
             <div className="sm:hidden">
-                <label htmlFor="hs-card-nav" className="sr-only">Select a nav</label>
-                    <select name="hs-card-nav" id="hs-card-nav" className="block w-full border-t-0 border-x-0 border-gray-300 rounded-t-xl focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                    <label htmlFor="hs-card-nav" className="sr-only">Select a nav</label>
+                    <select name="hs-card-nav" id="hs-card-nav" onChange={changeHandler} className="block w-full border-t-0 border-x-0 border-gray-300 rounded-t-xl focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
                         <option defaultValue="">Total Income</option>
-                    <option>Bills</option>
+                        <option>Bills</option>
                     <option>My Transactions</option>
                     <option>Misc</option>
                 </select>
@@ -37,16 +106,16 @@ const Dashboard = () => {
 
             {/* Nav (Device only) */}
             <div className="hidden sm:block">
-                <nav className="relative z-0 flex border-b border-gray-200 rounded-xl divide-x divide-gray-200 dark:border-neutral-700 dark:divide-neutral-700">
-                    <a className="group relative min-w-0 flex-1 bg-white py-4 px-4 border-b-2 border-b-blue-600 text-gray-900 rounded-ss-xl text-sm font-medium text-center overflow-hidden hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 focus:z-10 dark:bg-neutral-900 dark:border-b-blue-500 dark:text-neutral-300" aria-current="page" href="#">
+                    <nav className="relative z-0 flex border-b border-gray-200 rounded-xl divide-x divide-gray-200 dark:border-neutral-700 dark:divide-neutral-700">
+                        <a className="group relative min-w-0 flex-1 bg-white py-4 px-4 border-b-2 border-b-blue-600 text-gray-900 rounded-ss-xl text-sm font-medium text-center overflow-hidden hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 focus:z-10 dark:bg-neutral-900 dark:border-b-blue-500 dark:text-neutral-300" aria-current="page" onClick={totalIncomeClicked}>
                         Total Income
                     </a>
 
-                    <a className="group relative min-w-0 flex-1 bg-white py-4 px-4 text-gray-500 hover:text-gray-700 text-sm font-medium text-center overflow-hidden hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 focus:z-10 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-400 dark:focus:bg-neutral-800 dark:focus:text-neutral-400" href="#">
+                        <a className="group relative min-w-0 flex-1 bg-white py-4 px-4 text-gray-500 hover:text-gray-700 text-sm font-medium text-center overflow-hidden hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 focus:z-10 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-400 dark:focus:bg-neutral-800 dark:focus:text-neutral-400" onClick={billsClicked}>
                         Bills
                     </a>
 
-                    <a className="group relative min-w-0 flex-1 bg-white py-4 px-4 text-gray-500 hover:text-gray-700 text-sm font-medium text-center overflow-hidden hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 focus:z-10 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-400 dark:focus:bg-neutral-800 dark:focus:text-neutral-400" href="#">
+                        <a className="group relative min-w-0 flex-1 bg-white py-4 px-4 text-gray-500 hover:text-gray-700 text-sm font-medium text-center overflow-hidden hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 focus:z-10 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-400 dark:focus:bg-neutral-800 dark:focus:text-neutral-400" onClick={myTransactionsClicked}>
                         My Transactions
                     </a>
 
@@ -58,17 +127,17 @@ const Dashboard = () => {
             {/* End Nav (Device only) */}
 
             <div className="p-4 text-center md:py-7 md:px-5">
-                <h3 className="text-lg font-bold text-gray-800 dark:text-white">
-                    Total Income
+                    <h3 className="text-lg font-bold text-gray-800 dark:text-white">
+                        {title}
                 </h3>
-                <p className="mt-2 text-gray-500 dark:text-neutral-400">
-                    This value represents the sum of income on all connected partners.
+                    <p className="mt-2 text-gray-500 dark:text-neutral-400">
+                        {description}
                     </p>
 
-                    <p className="dark:text-white"><strong>$ 6,500.00</strong></p>
+                    <p className="dark:text-white"><strong>$ {value}</strong></p>
 
-                <a className="mt-3 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent  text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none" href="/income">
-                    Edit Income
+                    <a className="mt-3 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent  text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none" href={link}>
+                        {buttonText}
                 </a>
             </div>
             </div>
