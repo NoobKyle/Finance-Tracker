@@ -41,11 +41,31 @@ namespace CoupleFinanceTracker.Controllers
 		[HttpPost]
 		public async Task<ActionResult<UserReadDto>> CreateUser(UserCreateDto userCreateDto)
 		{
+			var couple = await _context.Couples
+				.FirstOrDefaultAsync(c => c.Id == userCreateDto.CoupleId);
+
+			if (couple == null)
+			{
+				couple = new Couple
+				{
+					Id = userCreateDto.CoupleId,          
+					CoupleCode = Guid.NewGuid().ToString(), 
+					
+				};
+
+				_context.Couples.Add(couple);
+				await _context.SaveChangesAsync();
+			}
+
 			var user = _mapper.Map<User>(userCreateDto);
+
+			user.CoupleId = couple.Id;
+
 			_context.Users.Add(user);
 			await _context.SaveChangesAsync();
 
 			var userReadDto = _mapper.Map<UserReadDto>(user);
+
 			return CreatedAtAction(nameof(GetUser), new { id = user.Id }, userReadDto);
 		}
 
