@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Menu from "./menu.jsx";
+
+import { fetchCoupleUsers } from "./helpers.js";
 
 const Dashboard = () => {
 
     const [isOpen, setIsOpen] = useState(false);
+    const [connectedUsers, setConnectedUsers] = useState({"coupleId": 0, "users": [{ "fullName": "No Users", "email": "test@email.com"}], "totalIncome": 0});
 
     const [title, setTitle] = useState("Total Income");
     const [description, setDescription] = useState("This value represents the sum of all incomes for all connected partners.");
-    const [value, setValue] = useState(6500);
+    const [value, setValue] = useState(0);
     const [buttonText, setButtonText] = useState("Edit Income");
     const [link, setLink] = useState("/income");
 
@@ -35,7 +38,7 @@ const Dashboard = () => {
         }
         setTitle("Total Income");
         setDescription("This value represents the sum of the incomes for all connected partners.");
-        setValue(6500)
+        setValue(connectedUsers.totalIncome);
         setButtonText("Edit Income");
         setLink("/income")
     }
@@ -72,6 +75,26 @@ const Dashboard = () => {
         setButtonText("View More");
         setLink("/misc")
     }
+
+
+    useEffect(() => {
+        async function loadData() {
+            try {
+                const user = JSON.parse(localStorage.getItem("user"));
+                if (!user || !user.coupleId) {
+                    return;
+                }
+                const result = await fetchCoupleUsers(user.coupleId);
+                setConnectedUsers(result);
+                setValue(result.totalIncome);
+            } catch (err) {
+                console.log("Error Fetching User Income Data");
+            }
+        }
+
+        loadData();
+    }, []);
+
     
 
     return (
@@ -141,6 +164,32 @@ const Dashboard = () => {
                 </a>
             </div>
             </div>
+
+            <div className=" bg-gray-100 dark:bg-neutral-900 p-6">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white ml-4">
+                    Connected Accounts
+                </h2>
+
+                <ul className="max-w-xs flex flex-col divide-y divide-gray-200 dark:divide-neutral-700 mt-4 ml-4 bg-white dark:bg-neutral-800 rounded-lg shadow">
+                    {connectedUsers.users.map((user, idx) => (
+                        <li
+                            key={idx}
+                            className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white"
+                        >
+                            <div className="flex justify-between w-full">
+                                {user.fullName}
+                                <span className="inline-flex items-center py-1 px-2 text-xs font-medium text-white bg-blue-600 rounded-md">
+                                    {user.email}
+                                </span>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+
+               
+            </div>
+
+
 
             <ul className="max-w-xs flex flex-col divide-y divide-gray-200 dark:divide-neutral-700 mt-4 ml-4">
                 <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white">

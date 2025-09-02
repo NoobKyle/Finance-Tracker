@@ -21,7 +21,7 @@ namespace CoupleFinanceTracker.DTOs
 
 		public string Role { get; set; } = "Member";
 
-		public int? CoupleId { get; set; }
+		public int CoupleId { get; set; }
 
 		public bool IsLinkedToPartner { get; set; } = false;
 	}
