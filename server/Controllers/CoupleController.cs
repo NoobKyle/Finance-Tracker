@@ -72,5 +72,42 @@ namespace CoupleFinanceTracker.Controllers
 
 			return NoContent();
 		}
+
+
+		// GET api/couple/{coupleId}/users
+		[HttpGet("{coupleId}/users")]
+		public async Task<IActionResult> GetUsersByCoupleId(int coupleId)
+		{
+			// Get users for the couple
+			var users = await _context.Users
+				.Where(u => u.CoupleId == coupleId)
+				.Select(u => new
+				{
+					u.Id,
+					u.FullName,
+					u.Email
+				})
+				.ToListAsync();
+
+			if (!users.Any())
+				return NotFound("No users found for this couple.");
+
+			// Get all incomes for these users
+			var userIds = users.Select(u => u.Id).ToList();
+			var totalIncome = await _context.Incomes
+				.Where(i => userIds.Contains(i.UserId))
+				.SumAsync(i => i.Amount);
+
+			// Build response
+			var result = new
+			{
+				CoupleId = coupleId,
+				Users = users.Select(u => new { u.FullName, u.Email }),
+				TotalIncome = totalIncome
+			};
+
+			return Ok(result);
+		}
+
 	}
 }
