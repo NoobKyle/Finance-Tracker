@@ -140,7 +140,7 @@ namespace CoupleFinanceTracker.DTOs
 	{
 		public decimal Amount { get; set; }
 		public string Category { get; set; }
-		public bool IsShared { get; set; }
+		public bool IsShared { get; set; } 
 	}
 
 	// -------- SAVINGS GOALS --------
