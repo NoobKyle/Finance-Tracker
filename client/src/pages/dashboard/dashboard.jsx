@@ -220,20 +220,7 @@ const Dashboard = () => {
 
 
 
-            <ul className="max-w-xs flex flex-col divide-y divide-gray-200 dark:divide-neutral-700 mt-4 ml-4">
-                <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white">
-                    <div className="flex justify-between w-full">
-                        Groceries
-                        <span className="inline-flex items-center py-1 px-2  text-xs font-medium text-white">$ 700.00</span>
-                    </div>
-                </li>
-                <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white">
-                    Settings
-                </li>
-                <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white">
-                    Newsletter
-                </li>
-            </ul>
+       
 
 
             {isOpen && ( <Menu /> )}
