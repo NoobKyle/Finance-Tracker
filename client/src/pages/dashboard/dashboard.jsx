@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Menu from "./menu.jsx";
 
-import { fetchCoupleUsers } from "./helpers.js";
+import { fetchCoupleUsers, getSharedExpenses } from "./helpers.js";
 
 const Dashboard = () => {
 
     const [isOpen, setIsOpen] = useState(false);
-    const [connectedUsers, setConnectedUsers] = useState({"coupleId": 0, "users": [{ "fullName": "No Users", "email": "test@email.com"}], "totalIncome": 0});
+    const [connectedUsers, setConnectedUsers] = useState({ "coupleId": 0, "users": [{ "fullName": "No Users", "email": "test@email.com" }], "totalIncome": 0 });
+    const [expenses, setExpenses] = useState([]);
 
     const [title, setTitle] = useState("Total Income");
     const [description, setDescription] = useState("This value represents the sum of all incomes for all connected partners.");
@@ -87,6 +88,9 @@ const Dashboard = () => {
                 const result = await fetchCoupleUsers(user.coupleId);
                 setConnectedUsers(result);
                 setValue(result.totalIncome);
+
+                const result2 = await getSharedExpenses(user.coupleId);
+                setExpenses(result2)
             } catch (err) {
                 console.log("Error Fetching User Income Data");
             }
@@ -190,21 +194,33 @@ const Dashboard = () => {
             </div>
 
 
+            <div className=" bg-gray-100 dark:bg-neutral-900 p-6">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white ml-4">
+                    Shared Expenses
+                </h2>
 
-            <ul className="max-w-xs flex flex-col divide-y divide-gray-200 dark:divide-neutral-700 mt-4 ml-4">
-                <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white">
-                    <div className="flex justify-between w-full">
-                        Groceries
-                        <span className="inline-flex items-center py-1 px-2  text-xs font-medium text-white">$ 700.00</span>
-                    </div>
-                </li>
-                <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white">
-                    Settings
-                </li>
-                <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white">
-                    Newsletter
-                </li>
-            </ul>
+                <ul className="max-w-xs flex flex-col divide-y divide-gray-200 dark:divide-neutral-700 mt-4 ml-4 bg-white dark:bg-neutral-800 rounded-lg shadow">
+                    {expenses.map(exp => (
+                        <li
+                            key={exp.id}
+                            className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white"
+                        >
+                            <div className="flex justify-between w-full">
+                                {exp.category}
+                                <span className="inline-flex items-center py-1 px-2 text-xs font-medium text-white  rounded-md">
+                                    {exp.amount}
+                                </span>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+
+               
+            </div>
+
+
+
+       
 
 
             {isOpen && ( <Menu /> )}

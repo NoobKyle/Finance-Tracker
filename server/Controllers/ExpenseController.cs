@@ -85,5 +85,28 @@ namespace CoupleFinanceTracker.Controllers
 
 			return Ok(_mapper.Map<IEnumerable<ExpenseReadDto>>(expenses));
 		}
+
+
+
+		// GET: api/expenses/shared/{coupleId}
+		[HttpGet("shared/{coupleId}")]
+		public async Task<IActionResult> GetSharedExpensesByCoupleId(int coupleId)
+		{
+			var userIds = await _context.Users
+				.Where(u => u.CoupleId == coupleId)
+				.Select(u => u.Id) 
+				.ToListAsync();
+
+			if (!userIds.Any())
+			{
+				return NotFound(new { message = "No users found for this couple." });
+			}
+
+			var sharedExpenses = await _context.Expenses
+				.Where(e => userIds.Contains(e.UserId) && e.IsShared == true)
+				.ToListAsync();
+
+			return Ok(sharedExpenses);
+		}
 	}
 }
