@@ -14,41 +14,84 @@ export default function Example() {
         coupleid: "",
     });
 
+    const [validationErrors, setValidationErrors] = useState({});
     const [successMessage, setSuccessMessage] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
             ...prev,
-            [name]: value
+            [name]: value,
         }));
+    };
+
+    const validateForm = () => {
+        const errors = {};
+
+        // Email
+        if (!formData.email) {
+            errors.email = "Email is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            errors.email = "Enter a valid email";
+        }
+
+        // Password
+        if (!formData.password) {
+            errors.password = "Password is required";
+        } else if (formData.password.length < 6) {
+            errors.password = "Password must be at least 6 characters";
+        }
+
+        // Fullname
+        if (!formData.fullname) {
+            errors.fullname = "Full name is required";
+        } else if (!/^[a-zA-Z\s]+$/.test(formData.fullname)) {
+            errors.fullname = "Full name can only contain letters and spaces";
+        }
+
+        // Role
+        if (!formData.role) {
+            errors.role = "Please select a role";
+        }
+
+        // Couple ID
+        if (!formData.coupleid) {
+            errors.coupleid = "Couple ID is required";
+        } else if (!/^[0-9]+$/.test(formData.coupleid)) {
+            errors.coupleid = "Couple ID must be a number";
+        } else if (parseInt(formData.coupleid, 10) <= 0) {
+            errors.coupleid = "Couple ID must be a positive number";
+        }
+
+        setValidationErrors(errors);
+        return Object.keys(errors).length === 0;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!validateForm()) return;
+
         const payload = {
             email: formData.email,
             passwordHash: formData.password,
             fullName: formData.fullname,
-            incomeSource: formData.incomesource,
+            incomeSource: "",
             role: formData.role,
             coupleId: Number(formData.coupleid),
-            isLinkedToPartner: true
+            isLinkedToPartner: true,
         };
 
         try {
             const res = await api.post("/Users", payload, {
                 headers: {
-                    "Content-Type": "application/json"
-                }
+                    "Content-Type": "application/json",
+                },
             });
             console.log("User created:", res.data);
 
-            // Show success message
             setSuccessMessage("✅ User created successfully! Redirecting to login...");
 
-            // Delay redirect
             setTimeout(() => {
                 navigate("/login");
             }, 1500);
@@ -93,6 +136,9 @@ export default function Example() {
                                 required
                                 className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-gray-500 focus:outline-indigo-500 sm:text-sm/6"
                             />
+                            {validationErrors.email && (
+                                <p className="mt-1 text-sm text-red-400">{validationErrors.email}</p>
+                            )}
                         </div>
                     </div>
 
@@ -111,6 +157,9 @@ export default function Example() {
                                 required
                                 className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-gray-500 focus:outline-indigo-500 sm:text-sm/6"
                             />
+                            {validationErrors.password && (
+                                <p className="mt-1 text-sm text-red-400">{validationErrors.password}</p>
+                            )}
                         </div>
                     </div>
 
@@ -129,43 +178,46 @@ export default function Example() {
                                 required
                                 className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-gray-500 focus:outline-indigo-500 sm:text-sm/6"
                             />
-                        </div>
-                    </div>
-
-                    {/* Income Source */}
-                    <div>
-                        <label htmlFor="incomesource" className="block text-sm/6 font-medium text-gray-100">
-                            Income Source
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                id="incomesource"
-                                name="incomesource"
-                                type="text"
-                                value={formData.incomesource}
-                                onChange={handleChange}
-                                required
-                                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-gray-500 focus:outline-indigo-500 sm:text-sm/6"
-                            />
+                            {validationErrors.fullname && (
+                                <p className="mt-1 text-sm text-red-400">{validationErrors.fullname}</p>
+                            )}
                         </div>
                     </div>
 
                     {/* Role */}
                     <div>
-                        <label htmlFor="role" className="block text-sm/6 font-medium text-gray-100">
+                        <label className="block text-sm/6 font-medium text-gray-100">
                             Role
                         </label>
-                        <div className="mt-2">
-                            <input
-                                id="role"
-                                name="role"
-                                type="text"
-                                value={formData.role}
-                                onChange={handleChange}
-                                required
-                                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-gray-500 focus:outline-indigo-500 sm:text-sm/6"
-                            />
+                        <div className="mt-2 flex gap-4">
+                            <label className="flex items-center gap-2 text-sm text-gray-200">
+                                <input
+                                    type="radio"
+                                    name="role"
+                                    value="member"
+                                    checked={formData.role === "member"}
+                                    onChange={handleChange}
+                                    className="h-4 w-4 text-indigo-500 focus:ring-indigo-500"
+                                    required
+                                />
+                                Member
+                            </label>
+
+                            <label className="flex items-center gap-2 text-sm text-gray-200">
+                                <input
+                                    type="radio"
+                                    name="role"
+                                    value="admin"
+                                    checked={formData.role === "admin"}
+                                    onChange={handleChange}
+                                    className="h-4 w-4 text-indigo-500 focus:ring-indigo-500"
+                                />
+                                Admin
+                            </label>
                         </div>
+                        {validationErrors.role && (
+                            <p className="mt-1 text-sm text-red-400">{validationErrors.role}</p>
+                        )}
                     </div>
 
                     {/* Couple ID */}
@@ -177,12 +229,17 @@ export default function Example() {
                             <input
                                 id="coupleid"
                                 name="coupleid"
-                                type="text"
+                                type="number"
+                                inputMode="numeric"
+                                pattern="[0-9]*"
                                 value={formData.coupleid}
                                 onChange={handleChange}
                                 required
                                 className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-gray-500 focus:outline-indigo-500 sm:text-sm/6"
                             />
+                            {validationErrors.coupleid && (
+                                <p className="mt-1 text-sm text-red-400">{validationErrors.coupleid}</p>
+                            )}
                         </div>
                     </div>
 
@@ -194,6 +251,12 @@ export default function Example() {
                         >
                             Sign up
                         </button>
+                        <p className="mt-2 text-center text-sm text-gray-600">
+                            Already have an account?{" "}
+                            <a href="/login" className="font-medium text-indigo-500 hover:text-indigo-400">
+                                Log in
+                            </a>
+                        </p>
                     </div>
                 </form>
 
