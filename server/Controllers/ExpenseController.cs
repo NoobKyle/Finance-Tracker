@@ -108,5 +108,23 @@ namespace CoupleFinanceTracker.Controllers
 
 			return Ok(sharedExpenses);
 		}
+
+
+
+		// GET: api/expenses/user/24
+		[HttpGet("userexpense/{userId}")]
+		public async Task<ActionResult<IEnumerable<Expense>>> GetUserExpenses(int userId)
+		{
+			var expenses = await _context.Expenses
+				.Where(e => e.UserId == userId)
+				.ToListAsync();
+
+			if (expenses == null || expenses.Count == 0)
+			{
+				return NotFound(new { Message = "No expenses found for this user." });
+			}
+
+			return Ok(expenses);
+		}
 	}
 }

@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Settings } from "lucide-react";
 import Menu from "./menu.jsx";
 
-import { fetchCoupleUsers, getSharedExpenses } from "./helpers.js";
+import { fetchCoupleUsers, getSharedExpenses, getSharedExpensesTotal, getUserExpenses } from "./helpers.js";
 
 const Dashboard = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [connectedUsers, setConnectedUsers] = useState({ "coupleId": 0, "users": [{ "fullName": "No Users", "email": "test@email.com" }], "totalIncome": 0 });
     const [expenses, setExpenses] = useState([]);
+    const [total, setTotal] = useState(0);
+    const [userExpense, setUserExpense] = useState({ count: 0, total: 0 });
 
     const [title, setTitle] = useState("Total Income");
     const [description, setDescription] = useState("This value represents the sum of all incomes for all connected partners.");
@@ -21,7 +25,7 @@ const Dashboard = () => {
         setOption(value);
 
 
-        if (value === "Bills") {
+        if (value === "Expenses") {
             billsClicked();
         } else if (value === "Total Income") {
             totalIncomeClicked();
@@ -50,7 +54,7 @@ const Dashboard = () => {
         }
         setTitle("Expenses");
         setDescription("This value represents the sum of the expenses for all connected partners.");
-        setValue(2200)
+        setValue(total)
         setButtonText("View More");
         setLink("/expenses")
     }
@@ -61,9 +65,9 @@ const Dashboard = () => {
         }
         setTitle("My Transactions");
         setDescription("This value represents the sum of all your transactions.");
-        setValue(105822)
+        setValue(userExpense.total)
         setButtonText("View More");
-        setLink("/transactions")
+        setLink("/expenses")
     }
     const miscClicked = (e) => {
 
@@ -91,6 +95,12 @@ const Dashboard = () => {
 
                 const result2 = await getSharedExpenses(user.coupleId);
                 setExpenses(result2)
+
+                const result3 = await getSharedExpensesTotal(user.coupleId);
+                setTotal(result3)
+
+                const result4 = await getUserExpenses(user.id)
+                setUserExpense(result4)
             } catch (err) {
                 console.log("Error Fetching User Income Data");
             }
@@ -105,11 +115,21 @@ const Dashboard = () => {
         <div className="container w-screen h-screen ">
             <header className="flex flex-wrap sm:justify-start sm:flex-nowrap z-50 w-full bg-white text-sm py-3 sm:py-0 dark:bg-neutral-900 mb-4">
                 <nav className="max-w-[85rem] w-full mx-auto px-4 md:px-6 lg:px-8">
-                    <div className="relative sm:flex sm:items-center">
-                        <div className="flex items-center justify-between">
-                            <p className="flex-none font-semibold text-xl text-black focus:outline-hidden focus:opacity-80 dark:text-white" aria-label="Brand">Couple Finance Tracker</p>
-                            
-                        </div>
+                    <div className="flex items-center justify-between">
+                        <p
+                            className="flex-none font-semibold text-xl text-black focus:outline-hidden focus:opacity-80 dark:text-white"
+                            aria-label="Brand"
+                        >
+                            Couple Finance Tracker
+                        </p>
+
+                        <Link
+                            to="/user"
+                            className="p-2 text-gray-600 hover:text-indigo-500 dark:text-gray-300 dark:hover:text-indigo-400"
+                            aria-label="Settings"
+                        >
+                            <Settings className="w-6 h-6" />
+                        </Link>
                     </div>
                 </nav>
             </header>
@@ -124,7 +144,7 @@ const Dashboard = () => {
                     <label htmlFor="hs-card-nav" className="sr-only">Select a nav</label>
                     <select name="hs-card-nav" id="hs-card-nav" onChange={changeHandler} className="block w-full border-t-0 border-x-0 border-gray-300 rounded-t-xl focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
                         <option defaultValue="">Total Income</option>
-                        <option>Bills</option>
+                        <option>Expenses</option>
                     <option>My Transactions</option>
                     <option>Misc</option>
                 </select>
@@ -139,7 +159,7 @@ const Dashboard = () => {
                     </a>
 
                         <a className="group relative min-w-0 flex-1 bg-white py-4 px-4 text-gray-500 hover:text-gray-700 text-sm font-medium text-center overflow-hidden hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 focus:z-10 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-400 dark:focus:bg-neutral-800 dark:focus:text-neutral-400" onClick={billsClicked}>
-                        Bills
+                        Expenses
                     </a>
 
                         <a className="group relative min-w-0 flex-1 bg-white py-4 px-4 text-gray-500 hover:text-gray-700 text-sm font-medium text-center overflow-hidden hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 focus:z-10 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-400 dark:focus:bg-neutral-800 dark:focus:text-neutral-400" onClick={myTransactionsClicked}>
@@ -147,7 +167,7 @@ const Dashboard = () => {
                     </a>
 
                     <a className="group relative min-w-0 flex-1 bg-white py-4 px-4 text-gray-500 hover:text-gray-700 rounded-se-xl text-sm font-medium text-center overflow-hidden hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 focus:z-10 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-400 dark:focus:bg-neutral-800 dark:focus:text-neutral-400" href="#">
-                        Misc
+                        Notes
                     </a>
                 </nav>
             </div>
@@ -197,6 +217,32 @@ const Dashboard = () => {
             <div className=" bg-gray-100 dark:bg-neutral-900 p-6">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white ml-4">
                     Shared Expenses
+                </h2>
+
+                <ul className="max-w-xs flex flex-col divide-y divide-gray-200 dark:divide-neutral-700 mt-4 ml-4 bg-white dark:bg-neutral-800 rounded-lg shadow">
+                    {expenses.map(exp => (
+                        <li
+                            key={exp.id}
+                            className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white"
+                        >
+                            <div className="flex justify-between w-full">
+                                {exp.category}
+                                <span className="inline-flex items-center py-1 px-2 text-xs font-medium text-white  rounded-md">
+                                    {exp.amount}
+                                </span>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+
+               
+            </div>
+
+
+
+            <div className=" bg-gray-100 dark:bg-neutral-900 p-6">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white ml-4">
+                    Savings
                 </h2>
 
                 <ul className="max-w-xs flex flex-col divide-y divide-gray-200 dark:divide-neutral-700 mt-4 ml-4 bg-white dark:bg-neutral-800 rounded-lg shadow">

@@ -5,18 +5,43 @@ export default function Example() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [validationErrors, setValidationErrors] = useState({});
+
+    const validateForm = () => {
+        const errors = {};
+
+        // Email validation
+        if (!email) {
+            errors.email = "Email is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            errors.email = "Enter a valid email";
+        }
+
+        // Password validation
+        if (!password) {
+            errors.password = "Password is required";
+        } else if (password.length < 6) {
+            errors.password = "Password must be at least 6 characters";
+        }
+
+        setValidationErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        setValidationErrors({});
+
+        if (!validateForm()) return;
 
         try {
             // 1️⃣ Login request
             const loginRes = await api.get("/Users/login", {
-                params: { email, password }
+                params: { email, password },
             });
 
-            const userId = loginRes.data; // adjust key if different
+            const userId = loginRes.data; // adjust key if API returns differently
 
             // 2️⃣ Fetch account info
             const accountRes = await api.get(`/Users/${userId}`);
@@ -28,8 +53,7 @@ export default function Example() {
             console.log("Login successful. User data saved:", accountData);
 
             // Optionally redirect after login
-             window.location.href = "/user";
-
+            window.location.href = "/user";
         } catch (err) {
             console.error("Login failed:", err);
             setError("Invalid email or password.");
@@ -51,6 +75,7 @@ export default function Example() {
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                 <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Email */}
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-100">
                             Email address
@@ -60,15 +85,18 @@ export default function Example() {
                                 id="email"
                                 name="email"
                                 type="email"
-                                required
                                 autoComplete="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:outline-indigo-500 sm:text-sm"
                             />
+                            {validationErrors.email && (
+                                <p className="mt-1 text-sm text-red-400">{validationErrors.email}</p>
+                            )}
                         </div>
                     </div>
 
+                    {/* Password */}
                     <div>
                         <div className="flex items-center justify-between">
                             <label htmlFor="password" className="block text-sm font-medium text-gray-100">
@@ -80,15 +108,18 @@ export default function Example() {
                                 id="password"
                                 name="password"
                                 type="password"
-                                required
                                 autoComplete="current-password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:outline-indigo-500 sm:text-sm"
                             />
+                            {validationErrors.password && (
+                                <p className="mt-1 text-sm text-red-400">{validationErrors.password}</p>
+                            )}
                         </div>
                     </div>
 
+                    {/* API error (invalid login) */}
                     {error && <p className="text-red-400 text-sm">{error}</p>}
 
                     <div>
@@ -96,8 +127,14 @@ export default function Example() {
                             type="submit"
                             className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-indigo-500"
                         >
-                            Sign in
+                            Login
                         </button>
+                        <p className="mt-2 text-center text-sm text-gray-600">
+                            Don’t have an account?{" "}
+                            <a href="/signup" className="font-medium text-indigo-500 hover:text-indigo-400">
+                                Sign up
+                            </a>
+                        </p>
                     </div>
                 </form>
 

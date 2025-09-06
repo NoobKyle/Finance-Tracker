@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import api from "../../api/axios"; // axios instance configured with baseURL from env
+import { Link, useNavigate } from "react-router-dom";
+import api from "../../api/axios"; // axios instance configured with baseURL
 
 export default function UsersTest() {
+    const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -24,6 +26,7 @@ export default function UsersTest() {
         userId = storedUser.id;
     }
 
+    // Fetch user info
     useEffect(() => {
         api.get(`/users/${userId}`)
             .then(res => {
@@ -52,6 +55,14 @@ export default function UsersTest() {
             });
     }, [userId]);
 
+    // Logout function
+    const handleLogout = () => {
+        if (window.confirm("Are you sure you want to logout?")) {
+            localStorage.removeItem("user");
+            navigate("/login");
+        }
+    };
+
     const handleUpdateUser = () => setShowUpdateModal(true);
     const handleDeleteUser = () => setShowDeleteModal(true);
 
@@ -63,6 +74,7 @@ export default function UsersTest() {
             alert("User deleted successfully");
             setShowDeleteModal(false);
             setUser(null);
+            navigate("/"); // redirect to homepage after deletion
         } catch (err) {
             alert("Failed to delete user: " + (err.response?.data?.message || err.message));
         } finally {
@@ -91,6 +103,8 @@ export default function UsersTest() {
 
     return (
         <>
+           
+
             {/* User Info Modal */}
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
                 <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-xl w-96 max-w-full overflow-hidden">
@@ -98,7 +112,18 @@ export default function UsersTest() {
                         <h3 className="text-xl font-semibold text-gray-800 dark:text-neutral-100">
                             User Information
                         </h3>
-                        <button onClick={() => setShowUpdateModal(false)} className="text-gray-400 hover:text-gray-600">&times;</button>
+                        <button
+                            onClick={() => {
+                                if (window.confirm("Are you sure you want to logout?")) {
+                                    localStorage.removeItem("user");
+                                    navigate("/login");
+                                }
+                            }}
+                            className="text-gray-400 hover:text-gray-600"
+                        >
+                            Logout
+                        </button>
+
                     </div>
                     <div className="p-4 space-y-2">
                         <p><span className="font-medium">Full Name:</span> {user.fullName}</p>
@@ -109,6 +134,12 @@ export default function UsersTest() {
                         <p><span className="font-medium">Linked to Partner:</span> {user.isLinkedToPartner ? "Yes" : "No"}</p>
                     </div>
                     <div className="flex justify-end gap-3 p-4 border-t border-gray-200 dark:border-neutral-700">
+                        <button
+                            onClick={() => navigate("/")}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                        >
+                            Back to Homepage
+                        </button>
                         <button
                             onClick={handleUpdateUser}
                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
