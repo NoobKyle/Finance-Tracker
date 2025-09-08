@@ -3,6 +3,7 @@ using System;
 using CoupleFinanceTracker.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoupleFinanceTracker.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250908090639_addSavingsGoalcontributions")]
+    partial class addSavingsGoalcontributions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,6 +274,9 @@ namespace CoupleFinanceTracker.Migrations
                     b.Property<int>("CoupleId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("CoupleId1")
+                        .HasColumnType("integer");
+
                     b.Property<decimal>("CurrentAmount")
                         .HasColumnType("numeric");
 
@@ -288,6 +293,8 @@ namespace CoupleFinanceTracker.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CoupleId");
+
+                    b.HasIndex("CoupleId1");
 
                     b.ToTable("SavingsGoals");
                 });
@@ -517,9 +524,15 @@ namespace CoupleFinanceTracker.Migrations
 
             modelBuilder.Entity("CoupleFinanceTracker.Models.SavingsGoal", b =>
                 {
+                    b.HasOne("CoupleFinanceTracker.Models.Couple", null)
+                        .WithMany()
+                        .HasForeignKey("CoupleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("CoupleFinanceTracker.Models.Couple", "Couple")
                         .WithMany("SavingsGoals")
-                        .HasForeignKey("CoupleId")
+                        .HasForeignKey("CoupleId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

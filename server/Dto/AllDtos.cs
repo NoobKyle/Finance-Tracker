@@ -146,20 +146,20 @@ namespace CoupleFinanceTracker.DTOs
 	// -------- SAVINGS GOALS --------
 	public class SavingsGoalCreateDto
 	{
-		public string Name { get; set; }
+		public string Title { get; set; }
 		public decimal TargetAmount { get; set; }
 		public int CoupleId { get; set; }
 	}
 	public class SavingsGoalReadDto
 	{
 		public int Id { get; set; }
-		public string Name { get; set; }
+		public string Title { get; set; }
 		public decimal TargetAmount { get; set; }
 		public decimal CurrentAmount { get; set; }
 	}
 	public class SavingsGoalUpdateDto
 	{
-		public string Name { get; set; }
+		public string Title { get; set; }
 		public decimal TargetAmount { get; set; }
 	}
 

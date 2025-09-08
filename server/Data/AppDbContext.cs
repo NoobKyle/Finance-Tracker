@@ -19,6 +19,7 @@ namespace CoupleFinanceTracker.Data
 		public DbSet<RecurringExpense> RecurringExpenses { get; set; }
 		public DbSet<Receipt> Receipts { get; set; }
 		public DbSet<Comment> Comments { get; set; }
+		public DbSet<SavingsGoalContribution> SavingsGoalContributions { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -88,6 +89,12 @@ namespace CoupleFinanceTracker.Data
 				.HasOne(i => i.User)
 				.WithMany()
 				.HasForeignKey(i => i.UserId);
+
+			modelBuilder.Entity<SavingsGoal>()
+				.HasOne(g => g.Couple)
+				.WithMany(c => c.SavingsGoals)
+				.HasForeignKey(g => g.CoupleId)
+				.OnDelete(DeleteBehavior.Cascade);
 
 		}
 	}
