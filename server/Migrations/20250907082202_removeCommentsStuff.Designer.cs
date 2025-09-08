@@ -3,6 +3,7 @@ using System;
 using CoupleFinanceTracker.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoupleFinanceTracker.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250907082202_removeCommentsStuff")]
+    partial class removeCommentsStuff
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,6 +274,9 @@ namespace CoupleFinanceTracker.Migrations
                     b.Property<int>("CoupleId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("CoupleId1")
+                        .HasColumnType("integer");
+
                     b.Property<decimal>("CurrentAmount")
                         .HasColumnType("numeric");
 
@@ -288,6 +293,8 @@ namespace CoupleFinanceTracker.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CoupleId");
+
+                    b.HasIndex("CoupleId1");
 
                     b.ToTable("SavingsGoals");
                 });
@@ -309,7 +316,7 @@ namespace CoupleFinanceTracker.Migrations
                     b.Property<int>("SavingsGoalId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -318,7 +325,7 @@ namespace CoupleFinanceTracker.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SavingsGoalContributions");
+                    b.ToTable("SavingsGoalContribution");
                 });
 
             modelBuilder.Entity("CoupleFinanceTracker.Models.Transaction", b =>
@@ -517,9 +524,15 @@ namespace CoupleFinanceTracker.Migrations
 
             modelBuilder.Entity("CoupleFinanceTracker.Models.SavingsGoal", b =>
                 {
+                    b.HasOne("CoupleFinanceTracker.Models.Couple", null)
+                        .WithMany()
+                        .HasForeignKey("CoupleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("CoupleFinanceTracker.Models.Couple", "Couple")
                         .WithMany("SavingsGoals")
-                        .HasForeignKey("CoupleId")
+                        .HasForeignKey("CoupleId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -534,11 +547,15 @@ namespace CoupleFinanceTracker.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoupleFinanceTracker.Models.User", null)
+                    b.HasOne("CoupleFinanceTracker.Models.User", "User")
                         .WithMany("SavingsGoalContributions")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("SavingsGoal");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CoupleFinanceTracker.Models.Transaction", b =>

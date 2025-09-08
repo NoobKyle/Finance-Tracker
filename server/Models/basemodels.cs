@@ -113,6 +113,7 @@ namespace CoupleFinanceTracker.Models
 		[Key]
 		public int Id { get; set; }
 
+		[Required]
 		public string Title { get; set; }
 
 		public decimal TargetAmount { get; set; }
@@ -123,28 +124,13 @@ namespace CoupleFinanceTracker.Models
 
 		public int CoupleId { get; set; }
 
-		[ForeignKey("CoupleId")]
-		public virtual Couple Couple { get; set; }
+		[ForeignKey(nameof(CoupleId))]
+		public Couple Couple { get; set; }
 
-		public virtual ICollection<SavingsGoalContribution> Contributions { get; set; }
+		public ICollection<SavingsGoalContribution> Contributions { get; set; } = new List<SavingsGoalContribution>();
 	}
 
-	public class SavingsGoalContribution
-	{
-		[Key]
-		public int Id { get; set; }
 
-		public decimal Amount { get; set; }
-
-		public DateTime Date { get; set; } = DateTime.UtcNow;
-
-		public int UserId { get; set; }
-		public int SavingsGoalId { get; set; }
-
-		// Navigation
-		public virtual User User { get; set; }
-		public virtual SavingsGoal SavingsGoal { get; set; }
-	}
 
 	public class Receipt
 	{
@@ -200,18 +186,10 @@ namespace CoupleFinanceTracker.Models
 
 		public int UserId { get; set; }
 
-		public int TransactionId { get; set; }
-
-		public int ExpenseId { get; set; }
-		 
-		public Expense Expense { get; set; }
-
 		[ForeignKey("UserId")]
 		public virtual User User { get; set; }
-
-		[ForeignKey("TransactionId")]
-		public virtual Transaction Transaction { get; set; }
 	}
+
 
 	public class ActivityLog
 	{
@@ -297,6 +275,22 @@ namespace CoupleFinanceTracker.Models
 
 		public bool IsShared { get; set; }
 	}
+
+	public class SavingsGoalContribution
+	{
+		[Key]
+		public int Id { get; set; }
+
+		public int SavingsGoalId { get; set; }
+
+		[ForeignKey("SavingsGoalId")]
+		public virtual SavingsGoal SavingsGoal { get; set; }
+
+		public decimal Amount { get; set; }
+
+		public DateTime Date { get; set; } = DateTime.UtcNow;
+	}
+
 
 
 }

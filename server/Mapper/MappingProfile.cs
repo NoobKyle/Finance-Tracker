@@ -52,6 +52,7 @@ namespace CoupleFinanceTracker
 			CreateMap<Comment, CommentReadDto>();
 			CreateMap<CommentCreateDto, Comment>();
 			CreateMap<CommentUpdateDto, Comment>();
+
 		}
 	}
 }

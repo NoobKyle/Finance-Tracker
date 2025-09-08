@@ -72,5 +72,57 @@ namespace CoupleFinanceTracker.Controllers
 
 			return NoContent();
 		}
+
+		// GET: /SavingsGoals/byCouple/{coupleId}
+		[HttpGet("byCouple/{coupleId}")]
+		public async Task<ActionResult<IEnumerable<SavingsGoalReadDto>>> GetByCouple(int coupleId)
+		{
+			var goals = await _context.SavingsGoals
+				.Where(g => g.CoupleId == coupleId)
+				.ToListAsync();
+
+			return goals.Select(g => new SavingsGoalReadDto
+			{
+				Id = g.Id,
+				Title = g.Title,
+				TargetAmount = g.TargetAmount,
+				CurrentAmount = g.CurrentAmount
+			}).ToList();
+		}
+
+
+
+		// POST: /SavingsGoals/{id}/contributions
+		[HttpPost("{id}/contributions")]
+		public async Task<ActionResult<SavingsGoalReadDto>> AddContribution(int id, [FromBody] ContributionDto dto)
+		{
+			var goal = await _context.SavingsGoals.FindAsync(id);
+			if (goal == null) return NotFound();
+
+			var contribution = new SavingsGoalContribution
+			{
+				SavingsGoalId = id,
+				Amount = dto.Amount,
+				Date = DateTime.UtcNow
+			};
+
+			goal.CurrentAmount += dto.Amount;
+			_context.SavingsGoalContributions.Add(contribution);
+
+			await _context.SaveChangesAsync();
+
+			return new SavingsGoalReadDto
+			{
+				Id = goal.Id,
+				Title = goal.Title,
+				TargetAmount = goal.TargetAmount,
+				CurrentAmount = goal.CurrentAmount
+			};
+		}
+	}
+
+	public class ContributionDto
+	{
+		public decimal Amount { get; set; }
 	}
 }

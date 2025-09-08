@@ -146,20 +146,20 @@ namespace CoupleFinanceTracker.DTOs
 	// -------- SAVINGS GOALS --------
 	public class SavingsGoalCreateDto
 	{
-		public string Name { get; set; }
+		public string Title { get; set; }
 		public decimal TargetAmount { get; set; }
 		public int CoupleId { get; set; }
 	}
 	public class SavingsGoalReadDto
 	{
 		public int Id { get; set; }
-		public string Name { get; set; }
+		public string Title { get; set; }
 		public decimal TargetAmount { get; set; }
 		public decimal CurrentAmount { get; set; }
 	}
 	public class SavingsGoalUpdateDto
 	{
-		public string Name { get; set; }
+		public string Title { get; set; }
 		public decimal TargetAmount { get; set; }
 	}
 
@@ -203,18 +203,25 @@ namespace CoupleFinanceTracker.DTOs
 	// -------- COMMENTS --------
 	public class CommentCreateDto
 	{
-		public string Content { get; set; }
-		public int ExpenseId { get; set; }
+		public string Text { get; set; }
 		public int UserId { get; set; }
+	  
 	}
+
 	public class CommentReadDto
 	{
 		public int Id { get; set; }
-		public string Content { get; set; }
+		public string Text { get; set; }
 		public DateTime CreatedAt { get; set; }
+		public int UserId { get; set; }
+	
 	}
+
 	public class CommentUpdateDto
 	{
-		public string Content { get; set; }
+		public string Text { get; set; }
+	
 	}
+
 }
+
