@@ -200,18 +200,10 @@ namespace CoupleFinanceTracker.Models
 
 		public int UserId { get; set; }
 
-		public int TransactionId { get; set; }
-
-		public int ExpenseId { get; set; }
-		 
-		public Expense Expense { get; set; }
-
 		[ForeignKey("UserId")]
 		public virtual User User { get; set; }
-
-		[ForeignKey("TransactionId")]
-		public virtual Transaction Transaction { get; set; }
 	}
+
 
 	public class ActivityLog
 	{

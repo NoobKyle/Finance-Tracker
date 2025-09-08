@@ -65,7 +65,6 @@ namespace CoupleFinanceTracker.Data
 			modelBuilder.Entity<Expense>()
 				.HasMany<Comment>()
 				.WithOne()
-				.HasForeignKey(c => c.ExpenseId)
 				.OnDelete(DeleteBehavior.Cascade);
 
 			modelBuilder.Entity<Couple>()
@@ -80,9 +79,10 @@ namespace CoupleFinanceTracker.Data
 				.HasForeignKey(r => r.ExpenseId);
 
 			modelBuilder.Entity<Comment>()
-				.HasOne(c => c.Expense)
-				.WithMany(e => e.Comments)
-				.HasForeignKey(c => c.ExpenseId);
+				.HasOne(c => c.User)
+				.WithMany(u => u.Comments)
+				.HasForeignKey(c => c.UserId);
+
 
 			modelBuilder.Entity<Income>()
 				.HasOne(i => i.User)

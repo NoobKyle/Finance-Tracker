@@ -31,7 +31,7 @@ const Dashboard = () => {
             totalIncomeClicked();
         } else if (value === "My Transactions") {
             myTransactionsClicked();
-        } else if (value === "Misc") {
+        } else if (value === "Notes") {
             miscClicked();
         }
     };
@@ -74,11 +74,11 @@ const Dashboard = () => {
         if (e) {
             e.preventDefault();
         }
-        setTitle("Misc");
-        setDescription("Extra information at a glance");
+        setTitle("Notes");
+        setDescription("Leave a note, read a note !");
         setValue(0)
-        setButtonText("View More");
-        setLink("/misc")
+        setButtonText("View Notes");
+        setLink("/notes")
     }
 
 
@@ -146,7 +146,7 @@ const Dashboard = () => {
                         <option defaultValue="">Total Income</option>
                         <option>Expenses</option>
                     <option>My Transactions</option>
-                    <option>Misc</option>
+                    <option>Notes</option>
                 </select>
             </div>
             {/* End Select (Mobile only) */}

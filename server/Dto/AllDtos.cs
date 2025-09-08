@@ -203,18 +203,25 @@ namespace CoupleFinanceTracker.DTOs
 	// -------- COMMENTS --------
 	public class CommentCreateDto
 	{
-		public string Content { get; set; }
-		public int ExpenseId { get; set; }
+		public string Text { get; set; }
 		public int UserId { get; set; }
+	  
 	}
+
 	public class CommentReadDto
 	{
 		public int Id { get; set; }
-		public string Content { get; set; }
+		public string Text { get; set; }
 		public DateTime CreatedAt { get; set; }
+		public int UserId { get; set; }
+	
 	}
+
 	public class CommentUpdateDto
 	{
-		public string Content { get; set; }
+		public string Text { get; set; }
+	
 	}
+
 }
+
