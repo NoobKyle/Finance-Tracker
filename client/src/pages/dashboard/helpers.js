@@ -14,16 +14,28 @@ export async function fetchCoupleUsers(coupleId) {
 }
 
 
-
 export async function getSharedExpenses(coupleId) {
     try {
         const response = await api.get(`/expenses/shared/${coupleId}`);
-        
-        return response.data.map(expense => ({
+        const expenses = response.data;
+
+        if (!Array.isArray(expenses) || expenses.length === 0) {
+            return [{
+                id: null,
+                amount: 0,
+                category: "No Current Shared Expenses",
+                date: "",
+                isShared: false,
+                userId: null,
+            }];
+        }
+
+        // Normalize API results
+        return expenses.map(expense => ({
             id: expense.id,
             amount: expense.amount,
             category: expense.category,
-            date: new Date(expense.date).toLocaleDateString(), 
+            date: new Date(expense.date).toLocaleDateString(),
             isShared: expense.isShared,
             userId: expense.userId,
         }));
@@ -32,6 +44,7 @@ export async function getSharedExpenses(coupleId) {
         throw error;
     }
 }
+
 
 
 export async function getSharedExpensesTotal(coupleId) {
@@ -69,5 +82,33 @@ export async function getUserExpenses(userId) {
     } catch (error) {
         console.error("Error fetching user expense summary:", error);
         return { count: 0, total: 0 };
+    }
+}
+
+
+
+export async function getSavingsGoals(coupleId) {
+    try {
+        const response = await api.get(`/SavingsGoals/byCouple/${coupleId}`);
+        const goals = response.data;
+
+        if (!Array.isArray(goals) || goals.length === 0) {
+            return [{
+                id: null,
+                title: "No Current Savings Goals.",
+                targetAmount: 0,
+                currentAmount: 0,
+            }];
+        }
+
+        return goals.map(goal => ({
+            id: goal?.id ?? null,
+            title: goal?.title ?? "Untitled Goal",
+            targetAmount: goal?.targetAmount ?? 0,
+            currentAmount: goal?.currentAmount ?? 0,
+        }));
+    } catch (error) {
+        console.error("Error fetching savings goals:", error);
+        throw error;
     }
 }
