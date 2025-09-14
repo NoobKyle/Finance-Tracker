@@ -129,9 +129,7 @@ export default function UsersTest() {
                         <p><span className="font-medium">Full Name:</span> {user.fullName}</p>
                         <p><span className="font-medium">Email:</span> {user.email}</p>
                         <p><span className="font-medium">Couple ID:</span> {user.coupleId}</p>
-                        <p><span className="font-medium">Income Source:</span> {user.incomeSource}</p>
                         <p><span className="font-medium">Role:</span> {user.role}</p>
-                        <p><span className="font-medium">Linked to Partner:</span> {user.isLinkedToPartner ? "Yes" : "No"}</p>
                     </div>
                     <div className="flex justify-end gap-3 p-4 border-t border-gray-200 dark:border-neutral-700">
                         <button

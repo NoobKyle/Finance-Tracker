@@ -3,13 +3,15 @@ import { Link } from "react-router-dom";
 import { Settings } from "lucide-react";
 import Menu from "./menu.jsx";
 
-import { fetchCoupleUsers, getSharedExpenses, getSharedExpensesTotal, getUserExpenses } from "./helpers.js";
+import {
+    fetchCoupleUsers, getSharedExpenses, getSharedExpensesTotal, getUserExpenses, getSavingsGoals} from "./helpers.js";
 
 const Dashboard = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [connectedUsers, setConnectedUsers] = useState({ "coupleId": 0, "users": [{ "fullName": "No Users", "email": "test@email.com" }], "totalIncome": 0 });
     const [expenses, setExpenses] = useState([]);
+    const [savings, setSavings] = useState([]);
     const [total, setTotal] = useState(0);
     const [userExpense, setUserExpense] = useState({ count: 0, total: 0 });
 
@@ -42,7 +44,7 @@ const Dashboard = () => {
             e.preventDefault();
         }
         setTitle("Total Income");
-        setDescription("This value represents the sum of the incomes for all connected partners.");
+        setDescription("This value represents the sum of incomes for all connected partners.");
         setValue(connectedUsers.totalIncome);
         setButtonText("Edit Income");
         setLink("/income")
@@ -53,7 +55,7 @@ const Dashboard = () => {
             e.preventDefault();
         }
         setTitle("Expenses");
-        setDescription("This value represents the sum of the expenses for all connected partners.");
+        setDescription("This value represents the sum of shared expenses for all connected partners.");
         setValue(total)
         setButtonText("View More");
         setLink("/expenses")
@@ -101,6 +103,9 @@ const Dashboard = () => {
 
                 const result4 = await getUserExpenses(user.id)
                 setUserExpense(result4)
+
+                const result5 = await getSavingsGoals(user.coupleId)
+                setSavings(result5)
             } catch (err) {
                 console.log("Error Fetching User Income Data");
             }
@@ -240,29 +245,39 @@ const Dashboard = () => {
 
 
 
-            <div className=" bg-gray-100 dark:bg-neutral-900 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white ml-4">
-                    Savings
-                </h2>
+           
+
+            <div className="bg-gray-100 dark:bg-neutral-900 p-6">
+                {/* header with title + manage link */}
+                <div className="flex items-center ml-4 mr-4">
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white mr-20">
+                        Savings
+                    </h2>
+                    <Link
+                        to="/savings"
+                        className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                        Manage savings
+                    </Link>
+                </div>
 
                 <ul className="max-w-xs flex flex-col divide-y divide-gray-200 dark:divide-neutral-700 mt-4 ml-4 bg-white dark:bg-neutral-800 rounded-lg shadow">
-                    {expenses.map(exp => (
+                    {savings.map((exp) => (
                         <li
                             key={exp.id}
                             className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white"
                         >
                             <div className="flex justify-between w-full">
-                                {exp.category}
-                                <span className="inline-flex items-center py-1 px-2 text-xs font-medium text-white  rounded-md">
-                                    {exp.amount}
+                                {exp.title}
+                                <span className="inline-flex items-center py-1 px-2 text-xs font-medium text-white rounded-md">
+                                    {exp.currentAmount} / {exp.targetAmount}
                                 </span>
                             </div>
                         </li>
                     ))}
                 </ul>
-
-               
             </div>
+
 
 
 
