@@ -286,6 +286,12 @@ namespace CoupleFinanceTracker.Models
 		[ForeignKey("SavingsGoalId")]
 		public virtual SavingsGoal SavingsGoal { get; set; }
 
+		[Required]
+		public int UserId { get; set; }   
+
+		[ForeignKey("UserId")]
+		public virtual User User { get; set; } 
+
 		public decimal Amount { get; set; }
 
 		public DateTime Date { get; set; } = DateTime.UtcNow;

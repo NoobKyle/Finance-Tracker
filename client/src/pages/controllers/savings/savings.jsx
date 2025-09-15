@@ -91,6 +91,7 @@ export default function SavingsGoalsPage() {
         try {
             const res = await api.post(`/SavingsGoals/${goalId}/contributions`, {
                 amount,
+                userId: user?.id,
             });
 
             setGoals((prev) =>

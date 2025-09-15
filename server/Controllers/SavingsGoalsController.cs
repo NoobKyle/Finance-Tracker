@@ -97,16 +97,21 @@ namespace CoupleFinanceTracker.Controllers
 		public async Task<ActionResult<SavingsGoalReadDto>> AddContribution(int id, [FromBody] ContributionDto dto)
 		{
 			var goal = await _context.SavingsGoals.FindAsync(id);
-			if (goal == null) return NotFound();
+			if (goal == null) return NotFound("Savings goal not found.");
+
+			var user = await _context.Users.FindAsync(dto.UserId);
+			if (user == null) return NotFound($"User {dto.UserId} not found.");
 
 			var contribution = new SavingsGoalContribution
 			{
 				SavingsGoalId = id,
+				UserId = dto.UserId, 
 				Amount = dto.Amount,
 				Date = DateTime.UtcNow
 			};
 
 			goal.CurrentAmount += dto.Amount;
+
 			_context.SavingsGoalContributions.Add(contribution);
 
 			await _context.SaveChangesAsync();
@@ -124,5 +129,6 @@ namespace CoupleFinanceTracker.Controllers
 	public class ContributionDto
 	{
 		public decimal Amount { get; set; }
+		public int UserId { get; set; }
 	}
 }
