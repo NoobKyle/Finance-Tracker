@@ -223,5 +223,44 @@ namespace CoupleFinanceTracker.DTOs
 	
 	}
 
+
+	// -------- REPORTS --------
+
+	public class IncomeVsExpenseDto
+	{
+		public decimal TotalIncome { get; set; }
+		public decimal TotalExpense { get; set; }
+		public decimal Net { get; set; }
+	}
+
+	public class ExpenseTrendDto
+	{
+		public string PeriodLabel { get; set; } // e.g. "2025-09" or "2025-W37"
+		public decimal TotalExpense { get; set; }
+	}
+
+	public class MonthlyViewDto
+	{
+		public string Period { get; set; } // e.g. "2025-09"
+		public decimal TotalIncome { get; set; }
+		public decimal TotalExpense { get; set; }
+		public decimal Net { get; set; }
+	}
+
+	public class GoalContributionBreakdownDto
+	{
+		public int GoalId { get; set; }
+		public string GoalTitle { get; set; }
+		public int UserId { get; set; }
+		public decimal TotalContributed { get; set; }
+	}
+
+	public class SavingsVsSpendingDto
+	{
+		public decimal TotalSavings { get; set; }
+		public decimal TotalSpending { get; set; }
+		public decimal SavingsRate { get; set; } // e.g. 0.4 = 40% of money saved
+	}
+
 }
 

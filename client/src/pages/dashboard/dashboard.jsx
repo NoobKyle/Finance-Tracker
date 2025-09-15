@@ -244,11 +244,7 @@ const Dashboard = () => {
             </div>
 
 
-
-           
-
             <div className="bg-gray-100 dark:bg-neutral-900 p-6">
-                {/* header with title + manage link */}
                 <div className="flex items-center ml-4 mr-4">
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white mr-20">
                         Savings
@@ -275,6 +271,30 @@ const Dashboard = () => {
                             </div>
                         </li>
                     ))}
+                </ul>
+            </div>
+
+
+
+            <div className="bg-gray-100 dark:bg-neutral-900 p-6">
+                <div className="flex items-center ml-4 mr-4">
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white mr-20">
+                        Reports
+                    </h2>
+                    <Link
+                        to="/reports"
+                        className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                        Generate Reports
+                    </Link>
+                </div>
+
+                <ul className="max-w-xs flex flex-col divide-y divide-gray-200 dark:divide-neutral-700 mt-4 ml-4 bg-white dark:bg-neutral-800 rounded-lg shadow">
+                        <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white">
+                            <div className="flex justify-between w-full">
+                                Generate Reports to get an overview of your accounts !
+                            </div>
+                        </li>
                 </ul>
             </div>
 
