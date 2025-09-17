@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using CoupleFinanceTracker.Data;
+using CoupleFinanceTracker.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,8 @@ builder.Services.AddCors(options =>
 				"https://couplefinancetracker.vercel.app" // Production frontend
 			)
 			.AllowAnyHeader()
-			.AllowAnyMethod();
+			.AllowAnyMethod()
+			.AllowCredentials();
 	});
 });
 
@@ -47,6 +49,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddScoped<LoggingActionFilter>();
 
 
 var app = builder.Build();

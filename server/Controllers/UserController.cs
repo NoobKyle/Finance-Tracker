@@ -6,17 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace CoupleFinanceTracker.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	public class UsersController : ControllerBase
+	[ServiceFilter(typeof(LoggingActionFilter))]
+	public class UsersController : BaseController 
 	{
 		private readonly AppDbContext _context;
 		private readonly IMapper _mapper;
 
-		public UsersController(AppDbContext context, IMapper mapper)
+		public UsersController(AppDbContext context, IMapper mapper, ILogger<UsersController> logger): base(logger)
 		{
 			_context = context;
 			_mapper = mapper;
