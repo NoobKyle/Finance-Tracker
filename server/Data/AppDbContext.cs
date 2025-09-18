@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using CoupleFinanceTracker.Models;
 
 namespace CoupleFinanceTracker.Data
@@ -14,10 +14,7 @@ namespace CoupleFinanceTracker.Data
 		public DbSet<Couple> Couples { get; set; }
 		public DbSet<Expense> Expenses { get; set; }
 		public DbSet<Income> Incomes { get; set; }
-		public DbSet<Budget> Budgets { get; set; }
 		public DbSet<SavingsGoal> SavingsGoals { get; set; }
-		public DbSet<RecurringExpense> RecurringExpenses { get; set; }
-		public DbSet<Receipt> Receipts { get; set; }
 		public DbSet<Comment> Comments { get; set; }
 		public DbSet<SavingsGoalContribution> SavingsGoalContributions { get; set; }
 
@@ -27,75 +24,58 @@ namespace CoupleFinanceTracker.Data
 
 			// Relationships (adjust depending on your models)
 
+			// User → Expense
 			modelBuilder.Entity<User>()
 				.HasMany<Expense>()
 				.WithOne()
 				.HasForeignKey(e => e.UserId)
 				.OnDelete(DeleteBehavior.Cascade);
 
+			// User → Income
 			modelBuilder.Entity<User>()
 				.HasMany<Income>()
 				.WithOne()
 				.HasForeignKey(i => i.UserId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			modelBuilder.Entity<User>()
-				.HasMany<Budget>()
-				.WithOne()
-				.HasForeignKey(b => b.UserId)
-				.OnDelete(DeleteBehavior.Cascade);
-
-			modelBuilder.Entity<User>()
-				.HasMany<RecurringExpense>()
-				.WithOne()
-				.HasForeignKey(r => r.UserId)
-				.OnDelete(DeleteBehavior.Cascade);
-
+			// Expense → User
 			modelBuilder.Entity<Expense>()
-				.HasOne(e => e.User)          
-				.WithMany(u => u.Expenses)    
-				.HasForeignKey(e => e.UserId) 
+				.HasOne(e => e.User)
+				.WithMany(u => u.Expenses)
+				.HasForeignKey(e => e.UserId)
 				.IsRequired();
 
-			modelBuilder.Entity<Expense>()
-				.HasMany<Receipt>()
-				.WithOne()
-				.HasForeignKey(r => r.ExpenseId)
-				.OnDelete(DeleteBehavior.Cascade);
-
+			// Expense → Comment
 			modelBuilder.Entity<Expense>()
 				.HasMany<Comment>()
 				.WithOne()
 				.OnDelete(DeleteBehavior.Cascade);
 
+			// Couple → SavingsGoal
 			modelBuilder.Entity<Couple>()
 				.HasMany<SavingsGoal>()
 				.WithOne()
 				.HasForeignKey(s => s.CoupleId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			modelBuilder.Entity<Receipt>()
-				.HasOne(r => r.Expense)
-				.WithMany(e => e.Receipts)
-				.HasForeignKey(r => r.ExpenseId);
-
+			// Comment → User
 			modelBuilder.Entity<Comment>()
 				.HasOne(c => c.User)
 				.WithMany(u => u.Comments)
 				.HasForeignKey(c => c.UserId);
 
-
+			// Income → User
 			modelBuilder.Entity<Income>()
 				.HasOne(i => i.User)
 				.WithMany()
 				.HasForeignKey(i => i.UserId);
 
+			// SavingsGoal → Couple
 			modelBuilder.Entity<SavingsGoal>()
 				.HasOne(g => g.Couple)
 				.WithMany(c => c.SavingsGoals)
 				.HasForeignKey(g => g.CoupleId)
 				.OnDelete(DeleteBehavior.Cascade);
-
 		}
 	}
 }

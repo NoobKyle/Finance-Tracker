@@ -29,24 +29,10 @@ namespace CoupleFinanceTracker
 			CreateMap<IncomeCreateDto, Income>();
 			CreateMap<IncomeUpdateDto, Income>();
 
-			// -------- BUDGETS --------
-			CreateMap<Budget, BudgetReadDto>();
-			CreateMap<BudgetCreateDto, Budget>();
-			CreateMap<BudgetUpdateDto, Budget>();
-
 			// -------- SAVINGS GOALS --------
 			CreateMap<SavingsGoal, SavingsGoalReadDto>();
 			CreateMap<SavingsGoalCreateDto, SavingsGoal>();
 			CreateMap<SavingsGoalUpdateDto, SavingsGoal>();
-
-			// -------- RECURRING EXPENSES --------
-			CreateMap<RecurringExpense, RecurringExpenseReadDto>();
-			CreateMap<RecurringExpenseCreateDto, RecurringExpense>();
-			CreateMap<RecurringExpenseUpdateDto, RecurringExpense>();
-
-			// -------- RECEIPTS --------
-			CreateMap<Receipt, ReceiptReadDto>();
-			CreateMap<ReceiptCreateDto, Receipt>();
 
 			// -------- COMMENTS --------
 			CreateMap<Comment, CommentReadDto>();
