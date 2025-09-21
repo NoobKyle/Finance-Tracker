@@ -95,15 +95,14 @@ namespace CoupleFinanceTracker.Controllers
 			return NoContent();
 		}
 
-		// Example: GET /api/users/login?email=test@example.com&password=12345
+		// GET /api/users/login?email=test@example.com&password=12345
 		[HttpGet("login")]
 		public async Task<ActionResult<int>> Login([FromQuery] string email, [FromQuery] string password)
 		{
 			var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 			if (user == null) return Unauthorized("Invalid credentials");
 
-			// If passwords are hashed, use a hashing library like BCrypt
-			if (user.PasswordHash != password) // Replace with hash verification in production
+			if (user.PasswordHash != password) 
 				return Unauthorized("Invalid credentials");
 
 			return Ok(user.Id);

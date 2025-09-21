@@ -28,38 +28,45 @@ export default function Example() {
     const validateForm = () => {
         const errors = {};
 
-        // Email
-        if (!formData.email) {
+        const email = formData.email.trim();
+        const password = formData.password.trim();
+        const fullname = formData.fullname.trim();
+        const role = formData.role.trim();
+        const coupleid = formData.coupleid.trim();
+
+        if (!email) {
             errors.email = "Email is required";
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-            errors.email = "Enter a valid email";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            errors.email = "Enter a valid email address";
+        } else if (email.length > 256) {
+            errors.email = "Email cannot exceed 256 characters";
         }
 
-        // Password
-        if (!formData.password) {
+        if (!password) {
             errors.password = "Password is required";
-        } else if (formData.password.length < 6) {
+        } else if (password.length < 6) {
             errors.password = "Password must be at least 6 characters";
+        } else if (password.length > 64) {
+            errors.password = "Password cannot exceed 64 characters";
         }
 
-        // Fullname
-        if (!formData.fullname) {
+        if (!fullname) {
             errors.fullname = "Full name is required";
-        } else if (!/^[a-zA-Z\s]+$/.test(formData.fullname)) {
+        } else if (!/^[a-zA-Z\s]+$/.test(fullname)) {
             errors.fullname = "Full name can only contain letters and spaces";
+        } else if (fullname.length > 100) {
+            errors.fullname = "Full name cannot exceed 100 characters";
         }
 
-        // Role
-        if (!formData.role) {
+        if (!role) {
             errors.role = "Please select a role";
         }
 
-        // Couple ID
-        if (!formData.coupleid) {
+        if (!coupleid) {
             errors.coupleid = "Couple ID is required";
-        } else if (!/^[0-9]+$/.test(formData.coupleid)) {
+        } else if (!/^[0-9]+$/.test(coupleid)) {
             errors.coupleid = "Couple ID must be a number";
-        } else if (parseInt(formData.coupleid, 10) <= 0) {
+        } else if (parseInt(coupleid, 10) <= 0) {
             errors.coupleid = "Couple ID must be a positive number";
         }
 
@@ -73,12 +80,12 @@ export default function Example() {
         if (!validateForm()) return;
 
         const payload = {
-            email: formData.email,
-            passwordHash: formData.password,
-            fullName: formData.fullname,
-            incomeSource: "",
-            role: formData.role,
-            coupleId: Number(formData.coupleid),
+            email: formData.email.trim(),
+            passwordHash: formData.password.trim(),
+            fullName: formData.fullname.trim(),
+            incomeSource: formData.incomesource.trim(),
+            role: formData.role.trim(),
+            coupleId: Number(formData.coupleid.trim()),
             isLinkedToPartner: true,
         };
 
@@ -133,7 +140,6 @@ export default function Example() {
                                 type="email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                required
                                 className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-gray-500 focus:outline-indigo-500 sm:text-sm/6"
                             />
                             {validationErrors.email && (
@@ -154,7 +160,6 @@ export default function Example() {
                                 type="password"
                                 value={formData.password}
                                 onChange={handleChange}
-                                required
                                 className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-gray-500 focus:outline-indigo-500 sm:text-sm/6"
                             />
                             {validationErrors.password && (
@@ -175,7 +180,6 @@ export default function Example() {
                                 type="text"
                                 value={formData.fullname}
                                 onChange={handleChange}
-                                required
                                 className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-gray-500 focus:outline-indigo-500 sm:text-sm/6"
                             />
                             {validationErrors.fullname && (
@@ -186,9 +190,7 @@ export default function Example() {
 
                     {/* Role */}
                     <div>
-                        <label className="block text-sm/6 font-medium text-gray-100">
-                            Role
-                        </label>
+                        <label className="block text-sm/6 font-medium text-gray-100">Role</label>
                         <div className="mt-2 flex gap-4">
                             <label className="flex items-center gap-2 text-sm text-gray-200">
                                 <input
@@ -198,7 +200,6 @@ export default function Example() {
                                     checked={formData.role === "member"}
                                     onChange={handleChange}
                                     className="h-4 w-4 text-indigo-500 focus:ring-indigo-500"
-                                    required
                                 />
                                 Member
                             </label>
@@ -234,7 +235,6 @@ export default function Example() {
                                 pattern="[0-9]*"
                                 value={formData.coupleid}
                                 onChange={handleChange}
-                                required
                                 className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-gray-500 focus:outline-indigo-500 sm:text-sm/6"
                             />
                             {validationErrors.coupleid && (

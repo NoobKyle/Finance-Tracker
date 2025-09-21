@@ -179,7 +179,6 @@ export default function UsersTest() {
                 </div>
             )}
 
-            {/* Update Modal */}
             {showUpdateModal && (
                 <div className="fixed inset-0 z-60 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white dark:bg-neutral-900 p-6 rounded-2xl shadow-lg w-96 max-w-full">
@@ -206,13 +205,7 @@ export default function UsersTest() {
                                 placeholder="Couple ID"
                                 className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
-                            <input
-                                type="text"
-                                value={updateForm.incomeSource}
-                                onChange={(e) => setUpdateForm({ ...updateForm, incomeSource: e.target.value })}
-                                placeholder="Income Source"
-                                className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
+                           
                             <input
                                 type="text"
                                 value={updateForm.role}
@@ -220,15 +213,6 @@ export default function UsersTest() {
                                 placeholder="Role"
                                 className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 dark:bg-neutral-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
-                            <label className="flex items-center gap-2">
-                                <input
-                                    type="checkbox"
-                                    checked={updateForm.isLinkedToPartner}
-                                    onChange={(e) => setUpdateForm({ ...updateForm, isLinkedToPartner: e.target.checked })}
-                                    className="w-4 h-4"
-                                />
-                                Linked to Partner
-                            </label>
                         </form>
                         <div className="flex justify-end gap-2 mt-4">
                             <button

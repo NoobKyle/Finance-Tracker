@@ -9,19 +9,23 @@ export default function Example() {
 
     const validateForm = () => {
         const errors = {};
+        const trimmedEmail = email.trim();
+        const trimmedPassword = password.trim();
 
-        // Email validation
-        if (!email) {
+        if (!trimmedEmail) {
             errors.email = "Email is required";
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            errors.email = "Enter a valid email";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+            errors.email = "Enter a valid email address";
+        } else if (trimmedEmail.length > 256) {
+            errors.email = "Email cannot exceed 256 characters";
         }
 
-        // Password validation
-        if (!password) {
+        if (!trimmedPassword) {
             errors.password = "Password is required";
-        } else if (password.length < 6) {
+        } else if (trimmedPassword.length < 6) {
             errors.password = "Password must be at least 6 characters";
+        } else if (trimmedPassword.length > 64) {
+            errors.password = "Password cannot exceed 64 characters";
         }
 
         setValidationErrors(errors);
@@ -36,23 +40,22 @@ export default function Example() {
         if (!validateForm()) return;
 
         try {
-            // 1️⃣ Login request
+            const trimmedEmail = email.trim();
+            const trimmedPassword = password.trim();
+
             const loginRes = await api.get("/Users/login", {
-                params: { email, password },
+                params: { email: trimmedEmail, password: trimmedPassword },
             });
 
-            const userId = loginRes.data; // adjust key if API returns differently
+            const userId = loginRes.data; 
 
-            // 2️⃣ Fetch account info
             const accountRes = await api.get(`/Users/${userId}`);
             const accountData = accountRes.data;
 
-            // 3️⃣ Save to localStorage
             localStorage.setItem("user", JSON.stringify(accountData));
 
             console.log("Login successful. User data saved:", accountData);
 
-            // Optionally redirect after login
             window.location.href = "/user";
         } catch (err) {
             console.error("Login failed:", err);
@@ -119,7 +122,6 @@ export default function Example() {
                         </div>
                     </div>
 
-                    {/* API error (invalid login) */}
                     {error && <p className="text-red-400 text-sm">{error}</p>}
 
                     <div>
