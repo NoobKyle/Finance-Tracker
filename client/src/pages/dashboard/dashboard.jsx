@@ -171,7 +171,7 @@ const Dashboard = () => {
                         My Transactions
                     </a>
 
-                    <a className="group relative min-w-0 flex-1 bg-white py-4 px-4 text-gray-500 hover:text-gray-700 rounded-se-xl text-sm font-medium text-center overflow-hidden hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 focus:z-10 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-400 dark:focus:bg-neutral-800 dark:focus:text-neutral-400" href="#">
+                        <a className="group relative min-w-0 flex-1 bg-white py-4 px-4 text-gray-500 hover:text-gray-700 rounded-se-xl text-sm font-medium text-center overflow-hidden hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 focus:z-10 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-400 dark:focus:bg-neutral-800 dark:focus:text-neutral-400" onClick={miscClicked}>
                         Notes
                     </a>
                 </nav>
@@ -281,18 +281,33 @@ const Dashboard = () => {
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white mr-20">
                         Reports
                     </h2>
-                    <Link
-                        to="/reports"
-                        className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
-                    >
-                        Generate Reports
-                    </Link>
+                    
                 </div>
 
                 <ul className="max-w-xs flex flex-col divide-y divide-gray-200 dark:divide-neutral-700 mt-4 ml-4 bg-white dark:bg-neutral-800 rounded-lg shadow">
                         <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white">
                             <div className="flex justify-between w-full">
                                 Generate Reports to get an overview of your accounts !
+                            </div>
+                        </li>
+                        <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white">
+                            <div className="flex justify-between w-full">
+                            <Link
+                                to="/reports"
+                                className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
+                            >
+                                Generate Graphic Reports
+                            </Link>
+                            </div>
+                        </li>
+                        <li className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white">
+                            <div className="flex justify-between w-full">
+                            <Link
+                                to="/reportstabular"
+                                className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
+                            >
+                                Generate Tabular Reports
+                            </Link>
                             </div>
                         </li>
                 </ul>

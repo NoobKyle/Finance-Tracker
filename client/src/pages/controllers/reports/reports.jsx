@@ -89,8 +89,9 @@ export default function FullReportsPage() {
                 Reports Dashboard for {user?.fullName || "Your Couple"}
             </h2>
 
+            <div className="flex flex-col md:flex-row gap-6">
             {/* Income vs Expenses */}
-            <div className="bg-white p-6 rounded shadow">
+                <div className="bg-white p-6 rounded shadow ">
                 <h3 className="text-xl mb-4 text-black">Income vs Expenses</h3>
                 <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
@@ -103,7 +104,7 @@ export default function FullReportsPage() {
 
             {/* Expense Trend */}
             <div className="bg-white p-6 rounded shadow">
-                <h3 className="text-xl mb-4 text-black">Expense Trend</h3>
+                    <h3 className="text-xl mb-4 text-black">Expense Trend</h3>
                 <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={expenseTrend}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -117,7 +118,7 @@ export default function FullReportsPage() {
 
             {/* Monthly View */}
             <div className="bg-white p-6 rounded shadow">
-                <h3 className="text-xl mb-4 text-black">Monthly View</h3>
+                    <h3 className="text-xl mb-4 text-black">Monthly View</h3>
                 <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={monthlyView}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -132,7 +133,7 @@ export default function FullReportsPage() {
 
             {/* Goal Contribution Breakdown */}
             <div className="bg-white p-6 rounded shadow">
-                <h3 className="text-xl mb-4 text-black">Goal Contribution Breakdown</h3>
+                    <h3 className="text-xl mb-4 text-black">Goal Contribution Breakdown</h3>
                 <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                         <Pie dataKey="value" data={goalBreakdown} cx="50%" cy="50%" outerRadius={100} label />
@@ -144,7 +145,7 @@ export default function FullReportsPage() {
 
             {/* Savings vs Spending */}
             <div className="bg-white p-6 rounded shadow">
-                <h3 className="text-xl mb-4 text-black">Savings vs Spending</h3>
+                    <h3 className="text-xl mb-4 text-black ">Savings vs Spending</h3>
                 <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={savingsVsSpending}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -154,6 +155,7 @@ export default function FullReportsPage() {
                         <Bar dataKey="amount" fill="#82ca9d" />
                     </BarChart>
                 </ResponsiveContainer>
+                </div>
             </div>
         </div>
     );
