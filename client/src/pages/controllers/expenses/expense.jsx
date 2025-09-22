@@ -9,6 +9,8 @@ export default function UserExpensePage() {
     const [selectedMonth, setSelectedMonth] = useState(
         new Date().toISOString().slice(0, 7) // default = current month (YYYY-MM)
     );
+    const [categories, setCategories] = useState([]);
+    const [customCategory, setCustomCategory] = useState("");
 
     const storedUser = localStorage.getItem("user");
     const user = storedUser ? JSON.parse(storedUser) : null;
@@ -17,6 +19,7 @@ export default function UserExpensePage() {
     useEffect(() => {
         if (!userId) return;
         fetchExpenses();
+        fetchCategories();
     }, [userId]);
 
     const fetchExpenses = async () => {
@@ -31,6 +34,15 @@ export default function UserExpensePage() {
         }
     };
 
+    const fetchCategories = async () => {
+        try {
+            const res = await api.get(`/configs/expense_type`);
+            setCategories(res.data);
+        } catch (err) {
+            console.error("Error fetching expense categories:", err);
+        }
+    };
+
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setForm({ ...form, [name]: type === "checkbox" ? checked : value });
@@ -41,9 +53,18 @@ export default function UserExpensePage() {
         try {
             const utcDate = new Date(form.date).toISOString();
 
+            const finalCategory = form.category === "__custom__" ? customCategory : form.category;
+
+            const payload = {
+                ...form,
+                category: finalCategory,
+                date: utcDate,
+                userId
+            };
+
             if (editingId) {
                 // Update
-                const res = await api.put(`/expenses/${editingId}`, { ...form, date: utcDate, userId });
+                const res = await api.put(`/expenses/${editingId}`, payload);
                 setExpenses((prev) =>
                     prev.map((exp) => (exp.id === editingId ? res.data : exp))
                 );
@@ -51,7 +72,7 @@ export default function UserExpensePage() {
                 fetchExpenses();
             } else {
                 // Create
-                const res = await api.post(`/expenses`, { ...form, date: utcDate, userId });
+                const res = await api.post(`/expenses`, payload);
                 setExpenses((prev) => [...prev, res.data]);
             }
             setForm({ amount: "", category: "", date: "", isShared: false });
@@ -128,15 +149,32 @@ export default function UserExpensePage() {
                     className="border rounded p-2 w-full text-black"
                     required
                 />
-                <input
-                    type="text"
+                <select
                     name="category"
-                    placeholder="Category"
                     value={form.category}
                     onChange={handleChange}
                     className="border rounded p-2 w-full text-black"
-                    required
-                />
+                >
+                    <option value="">Select Category</option>
+                    {categories.map((c) => (
+                        <option key={c.id} value={c.name}>
+                            {c.name}
+                        </option>
+                    ))}
+                    <option value="__custom__">Other (Custom)</option>
+                </select>
+
+                {/* Show custom input only if "__custom__" is chosen */}
+                {form.category === "__custom__" && (
+                    <input
+                        type="text"
+                        placeholder="Enter custom category"
+                        value={customCategory}
+                        onChange={(e) => setCustomCategory(e.target.value)}
+                        className="border rounded p-2 w-full text-black mt-2"
+                    />
+                )}
+
                 <input
                     type="date"
                     name="date"

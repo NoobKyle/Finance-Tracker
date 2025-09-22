@@ -262,5 +262,15 @@ namespace CoupleFinanceTracker.DTOs
 		public decimal SavingsRate { get; set; } // e.g. 0.4 = 40% of money saved
 	}
 
+
+	// -------- CONFIGS --------
+
+	public class ConfigReadDto
+	{
+		public int Id { get; set; }
+		public string Category { get; set; }
+		public string Name { get; set; }
+		public string? Description { get; set; }
+	}
 }
 

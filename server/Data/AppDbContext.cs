@@ -17,6 +17,8 @@ namespace CoupleFinanceTracker.Data
 		public DbSet<SavingsGoal> SavingsGoals { get; set; }
 		public DbSet<Comment> Comments { get; set; }
 		public DbSet<SavingsGoalContribution> SavingsGoalContributions { get; set; }
+		public DbSet<Config> Configs { get; set; }
+
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

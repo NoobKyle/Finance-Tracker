@@ -1,4 +1,3 @@
-// src/pages/UserIncomePage.jsx
 import { useEffect, useState } from "react";
 import api from "../../../api/axios";
 
@@ -9,6 +8,7 @@ export default function UserIncomePage() {
     const [loading, setLoading] = useState(true);
     const [form, setForm] = useState({ source: "", amount: "", date:"" });
     const [editingId, setEditingId] = useState(null);
+    const [incomeTypes, setIncomeTypes] = useState([]);
 
     const storedUser = localStorage.getItem("user");
     const user = storedUser ? JSON.parse(storedUser) : null;
@@ -17,6 +17,7 @@ export default function UserIncomePage() {
     useEffect(() => {
         if (!userId) return;
         fetchIncomes();
+        fetchIncomeTypes();
     }, [userId]);
 
     const fetchIncomes = async () => {
@@ -28,6 +29,15 @@ export default function UserIncomePage() {
             console.error("Error fetching incomes:", err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchIncomeTypes = async () => {
+        try {
+            const res = await api.get("/configs/income_type");
+            setIncomeTypes(res.data);
+        } catch (err) {
+            console.error("Error fetching income types:", err);
         }
     };
 
@@ -80,15 +90,21 @@ export default function UserIncomePage() {
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="mb-6 space-y-2">
-                <input
-                    type="text"
+                <select
                     name="source"
-                    placeholder="Income Source"
                     value={form.source}
                     onChange={handleChange}
                     className="border rounded p-2 w-full text-black"
                     required
-                />
+                >
+                    <option value="">Select Income Type</option>
+                    {incomeTypes.map((type) => (
+                        <option key={type.id} value={type.name}>
+                            {type.name}
+                        </option>
+                    ))}
+                </select>
+
                 <input
                     type="number"
                     name="amount"
