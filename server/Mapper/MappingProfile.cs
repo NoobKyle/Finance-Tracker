@@ -39,6 +39,9 @@ namespace CoupleFinanceTracker
 			CreateMap<CommentCreateDto, Comment>();
 			CreateMap<CommentUpdateDto, Comment>();
 
+
+			// -------- CONFIGS ----------
+			CreateMap<Config, ConfigReadDto>();
 		}
 	}
 }

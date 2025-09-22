@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 
@@ -14,6 +14,7 @@ export default function Example() {
         coupleid: "",
     });
 
+    const [roles, setRoles] = useState([]);
     const [validationErrors, setValidationErrors] = useState({});
     const [successMessage, setSuccessMessage] = useState("");
 
@@ -108,6 +109,18 @@ export default function Example() {
         }
     };
 
+    useEffect(() => {
+        const fetchRoles = async () => {
+            try {
+                const res = await api.get("/configs/user_role");
+                setRoles(res.data);
+            } catch (err) {
+                console.error("Error fetching roles:", err);
+            }
+        };
+        fetchRoles();
+    }, []);
+
     return (
         <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -191,30 +204,20 @@ export default function Example() {
                     {/* Role */}
                     <div>
                         <label className="block text-sm/6 font-medium text-gray-100">Role</label>
-                        <div className="mt-2 flex gap-4">
-                            <label className="flex items-center gap-2 text-sm text-gray-200">
-                                <input
-                                    type="radio"
-                                    name="role"
-                                    value="member"
-                                    checked={formData.role === "member"}
-                                    onChange={handleChange}
-                                    className="h-4 w-4 text-indigo-500 focus:ring-indigo-500"
-                                />
-                                Member
-                            </label>
-
-                            <label className="flex items-center gap-2 text-sm text-gray-200">
-                                <input
-                                    type="radio"
-                                    name="role"
-                                    value="admin"
-                                    checked={formData.role === "admin"}
-                                    onChange={handleChange}
-                                    className="h-4 w-4 text-indigo-500 focus:ring-indigo-500"
-                                />
-                                Admin
-                            </label>
+                        <div className="mt-2 flex flex-col gap-2">
+                            {roles.map((role) => (
+                                <label key={role.id} className="flex items-center gap-2 text-sm text-gray-200">
+                                    <input
+                                        type="radio"
+                                        name="role"
+                                        value={role.name}
+                                        checked={formData.role === role.name}
+                                        onChange={handleChange}
+                                        className="h-4 w-4 text-indigo-500 focus:ring-indigo-500"
+                                    />
+                                    {role.name}
+                                </label>
+                            ))}
                         </div>
                         {validationErrors.role && (
                             <p className="mt-1 text-sm text-red-400">{validationErrors.role}</p>
