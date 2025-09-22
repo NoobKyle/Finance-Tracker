@@ -14,6 +14,7 @@ import UserExpensePage from './pages/controllers/expenses/expense.jsx'
 import Notes from './pages/controllers/notes/notes.jsx'
 import Savings from './pages/controllers/savings/savings.jsx'
 import Reports from './pages/controllers/reports/reports.jsx'
+import Tabular from './pages/controllers/reports/reportstabular.jsx'
 
 import './index.css'
 
@@ -79,6 +80,15 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     element={
                         <ProtectedRoute>
                             <Reports />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/reportstabular"
+                    element={
+                        <ProtectedRoute>
+                            <Tabular />
                         </ProtectedRoute>
                     }
                 />
