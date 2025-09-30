@@ -69,7 +69,7 @@ const Dashboard = () => {
         setDescription("This value represents the sum of all your transactions.");
         setValue(userExpense.total)
         setButtonText("View More");
-        setLink("/expenses")
+        setLink("/myexpenses")
     }
     const miscClicked = (e) => {
 

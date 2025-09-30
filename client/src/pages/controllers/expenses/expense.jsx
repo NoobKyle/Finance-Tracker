@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import api from "../../../api/axios";
 
 export default function UserExpensePage() {
@@ -7,7 +7,7 @@ export default function UserExpensePage() {
     const [form, setForm] = useState({ amount: "", category: "", date: "", isShared: false });
     const [editingId, setEditingId] = useState(null);
     const [selectedMonth, setSelectedMonth] = useState(
-        new Date().toISOString().slice(0, 7) // default = current month (YYYY-MM)
+        new Date().toISOString().slice(0, 7)
     );
     const [categories, setCategories] = useState([]);
     const [customCategory, setCustomCategory] = useState("");
@@ -52,7 +52,6 @@ export default function UserExpensePage() {
         e.preventDefault();
         try {
             const utcDate = new Date(form.date).toISOString();
-
             const finalCategory = form.category === "__custom__" ? customCategory : form.category;
 
             const payload = {
@@ -63,7 +62,6 @@ export default function UserExpensePage() {
             };
 
             if (editingId) {
-                // Update
                 const res = await api.put(`/expenses/${editingId}`, payload);
                 setExpenses((prev) =>
                     prev.map((exp) => (exp.id === editingId ? res.data : exp))
@@ -71,10 +69,10 @@ export default function UserExpensePage() {
                 setEditingId(null);
                 fetchExpenses();
             } else {
-                // Create
                 const res = await api.post(`/expenses`, payload);
                 setExpenses((prev) => [...prev, res.data]);
             }
+
             setForm({ amount: "", category: "", date: "", isShared: false });
         } catch (err) {
             console.error("Error saving expense:", err);
@@ -100,19 +98,16 @@ export default function UserExpensePage() {
         }
     };
 
-    // Filter expenses by selected month
     const filteredExpenses = expenses.filter((exp) => {
-        if (!exp.date) return false; // skip if no date
-        const expMonth = new Date(exp.date).toISOString().slice(0, 7); // YYYY-MM
+        if (!exp.date) return false;
+        const expMonth = new Date(exp.date).toISOString().slice(0, 7);
         return expMonth === selectedMonth;
     });
 
-    // Sort by date (newest first)
     const sortedExpenses = [...filteredExpenses].sort(
         (a, b) => new Date(b.date) - new Date(a.date)
     );
 
-    // Calculate total for the month
     const monthlyTotal = filteredExpenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
 
     if (loading) return <p className="p-4">Loading...</p>;
@@ -123,8 +118,9 @@ export default function UserExpensePage() {
 
             {/* Month Selector */}
             <div className="mb-6">
-                <label className="block mb-2 font-medium">Select Month:</label>
+                <label htmlFor="month" className="block mb-2 font-medium">Select Month:</label>
                 <input
+                    id="month"
                     type="month"
                     value={selectedMonth}
                     onChange={(e) => setSelectedMonth(e.target.value)}
@@ -140,7 +136,9 @@ export default function UserExpensePage() {
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="mb-6 space-y-2">
+                <label htmlFor="amount" className="block font-medium">Amount</label>
                 <input
+                    id="amount"
                     type="number"
                     name="amount"
                     placeholder="Amount"
@@ -149,7 +147,10 @@ export default function UserExpensePage() {
                     className="border rounded p-2 w-full text-black"
                     required
                 />
+
+                <label htmlFor="category" className="block font-medium">Category</label>
                 <select
+                    id="category"
                     name="category"
                     value={form.category}
                     onChange={handleChange}
@@ -157,25 +158,28 @@ export default function UserExpensePage() {
                 >
                     <option value="">Select Category</option>
                     {categories.map((c) => (
-                        <option key={c.id} value={c.name}>
-                            {c.name}
-                        </option>
+                        <option key={c.id} value={c.name}>{c.name}</option>
                     ))}
                     <option value="__custom__">Other (Custom)</option>
                 </select>
 
-                {/* Show custom input only if "__custom__" is chosen */}
                 {form.category === "__custom__" && (
-                    <input
-                        type="text"
-                        placeholder="Enter custom category"
-                        value={customCategory}
-                        onChange={(e) => setCustomCategory(e.target.value)}
-                        className="border rounded p-2 w-full text-black mt-2"
-                    />
+                    <>
+                        <label htmlFor="customCategory" className="block font-medium">Custom Category</label>
+                        <input
+                            id="customCategory"
+                            type="text"
+                            placeholder="Enter custom category"
+                            value={customCategory}
+                            onChange={(e) => setCustomCategory(e.target.value)}
+                            className="border rounded p-2 w-full text-black mt-2"
+                        />
+                    </>
                 )}
 
+                <label htmlFor="date" className="block font-medium">Date</label>
                 <input
+                    id="date"
                     type="date"
                     name="date"
                     value={form.date}
@@ -183,6 +187,7 @@ export default function UserExpensePage() {
                     className="border rounded p-2 w-full text-black"
                     required
                 />
+
                 <label className="flex items-center space-x-2">
                     <input
                         type="checkbox"
@@ -192,6 +197,7 @@ export default function UserExpensePage() {
                     />
                     <span>Shared Expense</span>
                 </label>
+
                 <button
                     type="submit"
                     className="bg-blue-600 text-white px-4 py-2 rounded"
