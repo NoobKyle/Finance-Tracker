@@ -15,6 +15,7 @@ export default function UserExpensePage() {
     const storedUser = localStorage.getItem("user");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const userId = user?.id;
+    const coupleId = user?.coupleId;
 
     useEffect(() => {
         if (!userId) return;
@@ -25,7 +26,7 @@ export default function UserExpensePage() {
     const fetchExpenses = async () => {
         try {
             setLoading(true);
-            const res = await api.get(`/expenses/user/${userId}`);
+            const res = await api.get(`/expenses/shared/${coupleId}`);
             setExpenses(res.data);
         } catch (err) {
             console.error("Error fetching expenses:", err);
@@ -114,7 +115,7 @@ export default function UserExpensePage() {
 
     return (
         <div className="max-w-xl mx-auto p-6">
-            <h3 className="text-2xl mb-4">Expenses for {user.fullName}</h3>
+            <h3 className="text-2xl mb-4">Shared Expenses</h3>
 
             {/* Month Selector */}
             <div className="mb-6">
