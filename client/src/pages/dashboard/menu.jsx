@@ -8,25 +8,43 @@ const App = () => {
             heading: "Dashboard",
             links: [
                 { name: "Return to Dashboard", url: "/" },
+                { name: "User Info", url: "/user" },
+            ],
+        },
+        {
+            heading: "Income",
+            links: [
+                { name: "Add Income", url: "/income" },
             ],
         },
         {
             heading: "Expenses",
             links: [
-                { name: "Add Expense", url: "https://twitter.com" },
-                { name: "Edit Expense", url: "https://linkedin.com" },
-                { name: "Delete Expense", url: "https://github.com" },
+                { name: "Shared Expenses", url: "/expenses" },
+                { name: "My Expenses", url: "/myexpenses" },
             ],
         },
         {
-            heading: "Budgets",
+            heading: "Savings",
             links: [
-                { name: "Add Budget", url: "https://twitter.com" },
-                { name: "Edit Budget", url: "https://linkedin.com" },
-                { name: "Delete", url: "https://github.com" },
+                { name: "View Savings", url: "/savings" },
+            ],
+        },
+        {
+            heading: "Notes",
+            links: [
+                { name: "My Notes", url: "/notes" },
+            ],
+        },
+        {
+            heading: "Reports",
+            links: [
+                { name: "Reports Overview", url: "/reports" },
+                { name: "Tabular Reports", url: "/reportstabular" },
             ],
         },
     ];
+
 
     return (
         <div className="h-screen flex items-center justify-center bg-gray-100">
