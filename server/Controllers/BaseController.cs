@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace CoupleFinanceTracker.Controllers
 {
-	// Note: No [Route] here – let derived controllers define their own route
+	
 	[ApiController]
 	public abstract class BaseController : ControllerBase
 	{
@@ -19,9 +19,7 @@ namespace CoupleFinanceTracker.Controllers
 			_logger = logger;
 		}
 
-		/// <summary>
-		/// Helper for derived controllers to handle not found
-		/// </summary>
+		
 		protected ActionResult HandleNotFound(string entityName)
 		{
 			_logger.LogWarning("{Entity} not found", entityName);
@@ -29,9 +27,6 @@ namespace CoupleFinanceTracker.Controllers
 		}
 	}
 
-	/// <summary>
-	/// Separate logging filter as an attribute
-	/// </summary>
 	public class LoggingActionFilter : ActionFilterAttribute
 	{
 		private readonly ILogger<LoggingActionFilter> _logger;
