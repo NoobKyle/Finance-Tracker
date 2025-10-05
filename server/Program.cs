@@ -11,8 +11,8 @@ builder.Services.AddCors(options =>
 	{
 		policy
 			.WithOrigins(
-				"http://localhost:5173", // Vite default
-				"https://couplefinancetracker.vercel.app" // Production frontend
+				"http://localhost:5173", 
+				"https://couplefinancetracker.vercel.app" 
 			)
 			.AllowAnyHeader()
 			.AllowAnyMethod()
@@ -44,7 +44,6 @@ else
 }
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();

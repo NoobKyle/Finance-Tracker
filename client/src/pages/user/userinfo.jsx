@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../../api/axios"; // axios instance configured with baseURL
+import api from "../../api/axios";
 
 export default function UsersTest() {
     const navigate = useNavigate();

@@ -9,7 +9,7 @@ namespace CoupleFinanceTracker.Data
 		{
 		}
 
-		// DbSets for all entities
+		
 		public DbSet<User> Users { get; set; }
 		public DbSet<Couple> Couples { get; set; }
 		public DbSet<Expense> Expenses { get; set; }
@@ -24,7 +24,7 @@ namespace CoupleFinanceTracker.Data
 		{
 			base.OnModelCreating(modelBuilder);
 
-			// Relationships (adjust depending on your models)
+			
 
 			// User → Expense
 			modelBuilder.Entity<User>()

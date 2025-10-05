@@ -44,7 +44,7 @@ namespace CoupleFinanceTracker.Controllers
 		[HttpGet("/api/configs/{category}")]
 		public async Task<ActionResult<IEnumerable<ConfigReadDto>>> GetConfigsByCategory(string category)
 		{
-			// Normalize category if needed, e.g. lower-case
+			
 			var configs = await _context.Configs
 										.Where(c => c.Category == category)
 										.ToListAsync();
