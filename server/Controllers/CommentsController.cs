@@ -99,7 +99,7 @@ namespace CoupleFinanceTracker.Controllers
 		public async Task<ActionResult<IEnumerable<object>>> GetCommentsByCouple(int coupleId)
 		{
 			var comments = await _context.Comments
-				.Include(c => c.User) // make sure we bring in user details
+				.Include(c => c.User) 
 				.Where(c => c.User.CoupleId == coupleId)
 				.OrderByDescending(c => c.CreatedAt)
 				.Select(c => new
@@ -108,7 +108,7 @@ namespace CoupleFinanceTracker.Controllers
 					c.Text,
 					c.CreatedAt,
 					UserId = c.UserId,
-					UserName = c.User.FullName, // assumes you have a "FullName" property on User
+					UserName = c.User.FullName,
 				
 				})
 				.ToListAsync();

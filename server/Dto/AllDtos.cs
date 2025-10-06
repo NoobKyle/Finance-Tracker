@@ -235,13 +235,13 @@ namespace CoupleFinanceTracker.DTOs
 
 	public class ExpenseTrendDto
 	{
-		public string PeriodLabel { get; set; } // e.g. "2025-09" or "2025-W37"
+		public string PeriodLabel { get; set; } 
 		public decimal TotalExpense { get; set; }
 	}
 
 	public class MonthlyViewDto
 	{
-		public string Period { get; set; } // e.g. "2025-09"
+		public string Period { get; set; }
 		public decimal TotalIncome { get; set; }
 		public decimal TotalExpense { get; set; }
 		public decimal Net { get; set; }
@@ -259,7 +259,7 @@ namespace CoupleFinanceTracker.DTOs
 	{
 		public decimal TotalSavings { get; set; }
 		public decimal TotalSpending { get; set; }
-		public decimal SavingsRate { get; set; } // e.g. 0.4 = 40% of money saved
+		public decimal SavingsRate { get; set; }
 	}
 
 

@@ -78,7 +78,7 @@ namespace CoupleFinanceTracker.Controllers
 		[HttpGet("{coupleId}/users")]
 		public async Task<IActionResult> GetUsersByCoupleId(int coupleId)
 		{
-			// Get users for the couple
+			
 			var users = await _context.Users
 				.Where(u => u.CoupleId == coupleId)
 				.Select(u => new
@@ -98,7 +98,7 @@ namespace CoupleFinanceTracker.Controllers
 				.Where(i => userIds.Contains(i.UserId))
 				.SumAsync(i => i.Amount);
 
-			// Build response
+			
 			var result = new
 			{
 				CoupleId = coupleId,
